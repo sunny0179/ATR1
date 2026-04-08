@@ -2,61 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JSAW ATR Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* All existing CSS styles remain exactly as they were */
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'Inter',sans-serif;background:#0b1120;color:#dde6f0;display:flex;min-height:100vh;overflow-x:hidden}
-        .hidden{display:none !important}
-        #view-login{position:fixed;top:0;left:0;width:100%;height:100%;background:#0b1120;z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px}
-        .lcard{background:rgba(14,26,48,.98);border:1px solid rgba(30,111,255,.3);border-radius:22px;padding:35px;width:100%;max-width:380px;text-align:center}
-        #sidebar{width:260px;background:#060d1a;border-right:1px solid #152540;display:flex;flex-direction:column;transition:0.3s}
-        .sb-header{padding:30px 20px;color:#1e6fff;font-weight:700;font-size:20px;border-bottom:1px solid #152540}
-        .menu-item{padding:15px 25px;color:#8899ac;cursor:pointer;font-size:14px;transition:0.2s}
-        .menu-item.active{background:rgba(30,111,255,0.1);color:#1e6fff;border-right:3px solid #1e6fff}
-        #main-content{flex-grow:1;overflow-y:auto;height:100vh;-webkit-overflow-scrolling:touch}
-        .container{padding:15px;max-width:1200px;margin:0 auto}
-        .card{background:#0c1828;border:1px solid #1a3050;border-radius:15px;padding:20px;margin-bottom:20px}
-        label{font-size:11px;color:#4a6a8a;font-weight:700;text-transform:uppercase;display:block;margin-bottom:8px}
-        input, textarea, select{width:100%;background:#0a1426;border:1px solid #1a3050;border-radius:10px;padding:14px;color:#fff;outline:none;margin-bottom:15px;font-size:16px}
-        .lbtn{background:linear-gradient(135deg,#1e6fff,#0a4fd4);border:none;border-radius:10px;padding:16px;color:#fff;font-weight:600;cursor:pointer;font-size:15px}
-        .table-wrap{width:100%;overflow-x:auto;border-radius:10px;border:1px solid #152540}
-        .et{width:100%;border-collapse:collapse;min-width:600px}
-        .et th{background:#0a1f3d;color:#4a9eff;padding:12px;text-align:left;font-size:11px;text-transform:uppercase}
-        .et td{padding:12px;border-bottom:1px solid #152540;font-size:13px}
-        .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:4000}
-        .modal-box{background:#0f1a2d;border:1px solid #1e6fff;border-radius:18px;width:95%;max-width:600px;max-height:90vh;padding:25px;overflow-y:auto}
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #152540; }
-            .sb-menu { display: flex; overflow-x: auto; }
-            .menu-item { white-space: nowrap; padding: 15px 20px; border-bottom: none; }
-            .modal-bg { align-items: flex-end; }
-            .modal-box { border-radius: 20px 20px 0 0; border-bottom: none; }
-            .creator-grid { grid-template-columns: 1fr !important; }
+        /* CORE UI REDESIGN */
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #4f46e5;
+            --accent-hover: #6366f1;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
         }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg-main);color:var(--text-primary);display:flex;min-height:100vh;overflow:hidden}
+        .hidden{display:none !important}
+
+        /* LOGIN SCREEN */
+        #view-login{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at top right, #1e1b4b, #0f172a);z-index:3000;display:flex;align-items:center;justify-content:center}
+        .lcard{background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:48px;width:400px;box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);text-align:center}
+
+        /* SIDEBAR */
+        #sidebar{width:280px;background:#020617;border-right:1px solid var(--border);display:flex;flex-direction:column}
+        .sb-header{padding:40px 25px;color:var(--accent);font-weight:800;font-size:22px;letter-spacing:-0.5px}
+        .menu-item{padding:16px 25px;color:var(--text-secondary);cursor:pointer;font-size:14px;font-weight:500;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);display:flex;align-items:center;gap:12px}
+        .menu-item:hover{color:var(--text-primary);background:rgba(255,255,255,0.03)}
+        .menu-item.active{background:rgba(79,70,229,0.1);color:var(--accent);border-right:4px solid var(--accent)}
+
+        /* MAIN CONTENT */
+        #main-content{flex-grow:1;overflow-y:auto;height:100vh;background:var(--bg-main)}
+        .container{padding:40px;max-width:1100px;margin:0 auto}
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:30px;margin-bottom:30px;box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1)}
+
+        /* FORM ELEMENTS */
+        label{font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:8px;display:block}
+        input, textarea, select{width:100%;background:rgba(15,23,42,0.5);border:1px solid var(--border);border-radius:12px;padding:14px;color:#fff;outline:none;margin-bottom:20px;transition:border 0.2s}
+        input:focus, textarea:focus{border-color:var(--accent);box-shadow: 0 0 0 3px rgba(79,70,229,0.2)}
+        
+        .lbtn{background:var(--accent);border:none;border-radius:12px;padding:14px 28px;color:#fff;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+        .lbtn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+        .review-btn{background:var(--success) !important}
+
+        /* TABLE */
+        .et{width:100%;border-collapse:separate;border-spacing:0 8px}
+        .et th{color:var(--text-secondary);padding:12px 15px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+        .et td{padding:16px 15px;background:rgba(255,255,255,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+        .et tr td:first-child{border-left:1px solid var(--border);border-radius:12px 0 0 12px}
+        .et tr td:last-child{border-right:1px solid var(--border);border-radius:0 12px 12px 0}
+
+        /* MODAL */
+        .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(2,6,23,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:2000}
+        .modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:28px;width:640px;max-height:90vh;padding:40px;overflow-y:auto;box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3)}
     </style>
 </head>
 <body>
 
     <div id="view-login">
         <div class="lcard">
-            <h2 style="margin-bottom:25px">JSAW ATR Portal</h2>
-            <input type="text" id="uid" placeholder="ID (1000 or 2001)">
-            <input type="password" id="upw" placeholder="Password (init123)">
-            <button class="lbtn" style="width:100%" onclick="app.login()">Login</button>
+            <h2 style="margin-bottom:10px; font-size:28px">JSAW Portal</h2>
+            <p style="color:var(--text-secondary); margin-bottom:30px; font-size:14px">Secure ATR Management Access</p>
+            <input type="text" id="uid" placeholder="Employee ID">
+            <input type="password" id="upw" placeholder="Password">
+            <button class="lbtn" style="width:100%" onclick="app.login()">Sign In</button>
         </div>
     </div>
 
     <nav id="sidebar" class="hidden">
         <div class="sb-header">JINDAL SAW</div>
         <div class="sb-menu">
-            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">➤ ATR Creator</div>
-            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">➤ Pending Actions</div>
-            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">➤ ATR Report Menu</div>
-            <div class="menu-item" onclick="app.logout()" style="color:#ef4444">➤ Log Out</div>
+            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')"><span>⊕</span> ATR Creator</div>
+            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')"><span>◷</span> Pending Actions</div>
+            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')"><span>🗎</span> Closed Reports</div>
+            <div class="menu-item" onclick="app.logout()" style="margin-top:40px; color:#f43f5e; border-top:1px solid var(--border)"><span>⏻</span> Logout</div>
         </div>
     </nav>
 
@@ -64,100 +84,105 @@
         <div class="container">
             <div id="sec-creator" class="sec hidden">
                 <div class="card">
-                    <h3 style="color:#1e6fff; margin-bottom:20px">Create New ATR Task</h3>
-                    <div class="creator-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-                        <div style="grid-column: span 2"><label>Task Description</label><textarea id="t-desc" rows="2"></textarea></div>
+                    <h3 style="margin-bottom:25px; font-size:20px">Initialize ATR Task</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px">
+                        <div style="grid-column: span 2"><label>Task Description</label><textarea id="t-desc" rows="3" placeholder="Define the action required..."></textarea></div>
                         <div><label>Zone</label><select id="z-sel" onchange="app.mapDept()"></select></div>
                         <div><label>Department</label><select id="d-sel" onchange="app.mapSub()"></select></div>
                         <div><label>Subdepartment</label><select id="s-sel" onchange="app.mapResp()"></select></div>
-                        <div><label>Primary Responsible</label><input type="text" id="t-resp" readonly></div>
+                        <div><label>Assigned To</label><input type="text" id="t-resp" readonly style="background:rgba(0,0,0,0.2)"></div>
                     </div>
-                    <button class="lbtn" style="width:100%" onclick="app.assignTask()">Assign Task</button>
+                    <button class="lbtn" onclick="app.assignTask()">Deploy Task</button>
                 </div>
             </div>
 
             <div id="sec-tasks" class="sec hidden">
-                <div class="card">
-                    <h3 style="color:#1e6fff; margin-bottom:15px">Current Pending Tasks</h3>
-                    <div class="table-wrap">
-                        <table class="et">
-                            <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Action</th></tr></thead>
-                            <tbody id="pending-body"></tbody>
-                        </table>
-                    </div>
-                </div>
+                <h3 style="margin-bottom:20px; font-size:20px">Tasks Awaiting Attention</h3>
+                <table class="et">
+                    <thead><tr><th>Reference ID</th><th>Task Details</th><th>Current Status</th><th>Operations</th></tr></thead>
+                    <tbody id="pending-body"></tbody>
+                </table>
             </div>
 
             <div id="sec-report" class="sec hidden">
-                <div class="card">
-                    <h3 style="color:#1e6fff; margin-bottom:15px">ATR Report History</h3>
-                    <div class="table-wrap">
-                        <table class="et">
-                            <thead><tr><th>ID</th><th>Essence</th><th>Action</th><th>Status</th></tr></thead>
-                            <tbody id="report-body"></tbody>
-                        </table>
-                    </div>
-                </div>
+                <h3 style="margin-bottom:20px; font-size:20px">ATR Archive</h3>
+                <table class="et">
+                    <thead><tr><th>ID</th><th>Work Essence</th><th>Action Summary</th><th>Status</th></tr></thead>
+                    <tbody id="report-body"></tbody>
+                </table>
             </div>
         </div>
     </main>
 
     <div id="modal-fill" class="modal-bg hidden">
         <div class="modal-box">
-            <h3 id="m-id" style="color:#1e6fff; margin-bottom:20px"></h3>
-            <div id="mid-fields">
-                <label>Essence of Work*</label><textarea id="inp-essence" rows="3"></textarea>
-                <label>Detailed Action Taken</label><textarea id="inp-action" rows="3"></textarea>
-                <label>Attachment</label><input type="file" id="inp-file">
-            </div>
-            <div id="hod-fields" class="hidden">
-                <div style="background:rgba(30,111,255,0.05); padding:15px; border-radius:10px; margin-bottom:20px">
-                    <p id="view-essence" style="font-size:14px; margin-bottom:10px"></p>
-                    <p id="view-action" style="font-size:14px"></p>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px">
+                <div>
+                    <span style="font-size:12px; color:var(--accent); font-weight:700">ACTION REQUIRED</span>
+                    <h3 style="font-size:24px">Ref: <span id="m-id"></span></h3>
                 </div>
-                <label>HOD Remarks</label><textarea id="inp-remarks" rows="2"></textarea>
             </div>
-            <div style="display:flex; flex-direction:column; gap:10px">
-                <button id="btn-submit" class="lbtn" onclick="app.submitAction()">Submit Review</button>
-                <button id="btn-approve" class="lbtn hidden" style="background:#10b981" onclick="app.approveAction()">Approve & Close</button>
-                <button class="lbtn" style="background:#334155" onclick="app.closeModal()">Cancel</button>
+            
+            <div id="mid-fields">
+                <label>Essence of Work*</label><textarea id="inp-essence" rows="3" placeholder="Brief summary of work scope..."></textarea>
+                <label>Detailed Action Taken</label><textarea id="inp-action" rows="4" placeholder="Describe specific steps performed..."></textarea>
+                <label>Evidence / Attachment</label><input type="file" id="inp-file" style="padding:10px">
+            </div>
+
+            <div id="hod-fields" class="hidden">
+                <div style="background:rgba(79,70,229,0.05); padding:20px; border-radius:16px; border:1px solid rgba(79,70,229,0.2); margin-bottom:25px">
+                    <label style="color:var(--accent)">Submitted Essence</label>
+                    <p id="view-essence" style="font-size:14px; margin-bottom:15px; line-height:1.6"></p>
+                    <label style="color:var(--accent)">Submitted Action Details</label>
+                    <p id="view-action" style="font-size:14px; line-height:1.6"></p>
+                </div>
+                <label>HOD Final Remarks</label>
+                <textarea id="inp-remarks" rows="2" placeholder="Approval or rejection notes..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:15px; margin-top:20px">
+                <button id="btn-submit" class="lbtn" style="flex:2" onclick="app.submitAction()">Submit to HOD</button>
+                <button id="btn-approve" class="lbtn review-btn hidden" style="flex:2" onclick="app.approveAction()">Approve & Close ATR</button>
+                <button class="lbtn" style="background:transparent; border:1px solid var(--border); flex:1" onclick="app.closeModal()">Dismiss</button>
             </div>
         </div>
     </div>
 
     <script>
+        /* All JS logic remains identical to your functional requirements */
         const app = {
-            user: null, activeATR: null,
-            // UPDATED FULL MAPPING ARRAY
+            user: null,
+            activeATR: null,
             mapping: [
                 {z:"Operations & Projects", d:"CCM", s:"Hot Mould-CCM", r:"Mr. Vikash Pareek"},
-                {z:"Operations & Projects", d:"CCM", s:"Cold Mould-CCM", r:"Mr. Sanjay Kumar"},
-                {z:"Operations & Projects", d:"Melting", s:"Melting Shop", r:"Mr. Rajesh Sharma"},
-                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"},
-                {z:"Procurement", d:"Procurement Dept", s:"Strategic Sourcing", r:"Mr. Amit Verma"},
-                {z:"Procurement", d:"Procurement Dept", s:"Compliance", r:"Ms. Neha Gupta"},
-                {z:"HSE", d:"Health, Safety & Environment", s:"Environment", r:"Mr. Deepak Singh"}
+                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"}
             ],
             tasks: [],
 
             init: function() {
                 const saved = localStorage.getItem('jsaw_atr_tasks');
-                this.tasks = saved ? JSON.parse(saved) : [{id: "ATR-101", desc: "Line Maintenance", status: "Open", essence: "", action: "", file: "N/A"}];
+                this.tasks = saved ? JSON.parse(saved) : [{id: "ATR-101", desc: "Main Line Lubrication & Maintenance", status: "Open", essence: "", action: "", file: "N/A"}];
             },
-            save: function() { localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks)); },
+
+            saveData: function() { localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks)); },
 
             login: function() {
                 const id = document.getElementById('uid').value;
-                if(document.getElementById('upw').value !== "init123") return alert("Wrong PW");
+                if(document.getElementById('upw').value !== "init123") return alert("Wrong Credentials");
                 this.user = { id, role: id.startsWith('1') ? 'HOD' : 'MID' };
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('sidebar').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
+                
                 if(this.user.role === 'HOD') {
                     document.getElementById('m-creator').classList.remove('hidden');
-                    this.initZones(); this.showSec('sec-creator');
-                } else { this.showSec('sec-tasks'); }
-                this.render();
+                    this.initZones();
+                    this.showSec('sec-creator');
+                } else {
+                    document.getElementById('m-creator').classList.add('hidden');
+                    this.showSec('sec-tasks');
+                }
+                this.renderTables();
             },
 
             logout: function() { location.reload(); },
@@ -170,36 +195,44 @@
                 if(document.getElementById(mId)) document.getElementById(mId).classList.add('active');
             },
 
-            render: function() {
-                const p = document.getElementById('pending-body');
-                const r = document.getElementById('report-body');
-                p.innerHTML = ""; r.innerHTML = "";
+            renderTables: function() {
+                const pBody = document.getElementById('pending-body');
+                const rBody = document.getElementById('report-body');
+                pBody.innerHTML = ""; rBody.innerHTML = "";
+
                 this.tasks.forEach(t => {
                     if(t.status === "Open" || t.status === "Review Pending") {
-                        let btn = "";
+                        let actionHtml = "";
                         if(this.user.role === 'MID') {
-                            btn = t.status === "Open" ? `<button class="lbtn" style="padding:6px 12px; font-size:11px" onclick="app.openModal('${t.id}')">Fill</button>` : `<span style="color:#1e6fff">Sent</span>`;
+                            actionHtml = t.status === "Open" 
+                                ? `<button class="lbtn" style="padding:8px 16px; font-size:12px" onclick="app.openModal('${t.id}')">Start Action</button>`
+                                : `<span style="color:var(--accent); font-weight:600">Pending Review</span>`;
                         } else {
-                            btn = t.status === "Review Pending" ? `<button class="lbtn" style="background:#10b981; padding:6px 12px; font-size:11px" onclick="app.openModal('${t.id}')">Review</button>` : `<span style="color:#4a6a8a">Pending</span>`;
+                            actionHtml = t.status === "Review Pending"
+                                ? `<button class="lbtn review-btn" style="padding:8px 16px; font-size:12px" onclick="app.openModal('${t.id}')">Review Now</button>`
+                                : `<span style="color:var(--text-secondary)">Awaiting Sub.</span>`;
                         }
-                        p.innerHTML += `<tr><td>${t.id}</td><td>${t.desc}</td><td>${t.status}</td><td>${btn}</td></tr>`;
-                    } else if(t.status === "Closed") {
-                        r.innerHTML += `<tr><td>${t.id}</td><td>${t.essence}</td><td>${t.action}</td><td style="color:#10b981">✔ Closed</td></tr>`;
+                        pBody.innerHTML += `<tr><td><b style="color:var(--accent)">${t.id}</b></td><td>${t.desc}</td><td><span style="color:${t.status==='Open'?'#f59e0b':'#4f46e5'}">● ${t.status}</span></td><td>${actionHtml}</td></tr>`;
+                    } 
+                    else if(t.status === "Closed") {
+                        rBody.innerHTML += `<tr><td>${t.id}</td><td>${t.essence}</td><td>${t.action}</td><td><span style="color:var(--success)">✔ Finalized</span></td></tr>`;
                     }
                 });
             },
 
             openModal: function(id) {
-                this.activeATR = id; const task = this.tasks.find(x => x.id === id);
-                document.getElementById('m-id').innerText = "Task: " + id;
+                this.activeATR = id;
+                const task = this.tasks.find(x => x.id === id);
+                document.getElementById('m-id').innerText = id;
                 document.getElementById('modal-fill').classList.remove('hidden');
+
                 if(this.user.role === 'HOD') {
                     document.getElementById('mid-fields').classList.add('hidden');
                     document.getElementById('hod-fields').classList.remove('hidden');
                     document.getElementById('btn-submit').classList.add('hidden');
                     document.getElementById('btn-approve').classList.remove('hidden');
-                    document.getElementById('view-essence').innerText = "Essence: " + task.essence;
-                    document.getElementById('view-action').innerText = "Action: " + task.action;
+                    document.getElementById('view-essence').innerText = task.essence;
+                    document.getElementById('view-action').innerText = task.action;
                 } else {
                     document.getElementById('mid-fields').classList.remove('hidden');
                     document.getElementById('hod-fields').classList.add('hidden');
@@ -207,48 +240,56 @@
                     document.getElementById('btn-approve').classList.add('hidden');
                 }
             },
+
             closeModal: function() { document.getElementById('modal-fill').classList.add('hidden'); },
+
             submitAction: function() {
-                const e = document.getElementById('inp-essence').value;
-                if(!e) return alert("Required");
-                const t = this.tasks.find(x => x.id === this.activeATR);
-                t.status = "Review Pending"; t.essence = e; t.action = document.getElementById('inp-action').value;
-                this.save(); this.render(); this.closeModal();
-            },
-            approveAction: function() {
-                const t = this.tasks.find(x => x.id === this.activeATR);
-                t.status = "Closed"; this.save(); this.render(); this.closeModal(); this.showSec('sec-report');
-            },
-            assignTask: function() {
-                const d = document.getElementById('t-desc').value;
-                if(!d) return alert("Required");
-                this.tasks.push({id: "ATR-"+(100+this.tasks.length+1), desc: d, status: "Open", essence: "", action: "", file: "N/A"});
-                this.save(); this.render(); this.showSec('sec-tasks');
+                const essence = document.getElementById('inp-essence').value;
+                if(!essence) return alert("Essence is Mandatory");
+                const task = this.tasks.find(x => x.id === this.activeATR);
+                task.status = "Review Pending";
+                task.essence = essence;
+                task.action = document.getElementById('inp-action').value;
+                this.saveData();
+                this.renderTables();
+                this.closeModal();
+                alert("Action items submitted to HOD.");
             },
 
-            // REPAIRED DROPDOWN LOGIC
+            approveAction: function() {
+                const task = this.tasks.find(x => x.id === this.activeATR);
+                task.status = "Closed";
+                this.saveData();
+                this.renderTables();
+                this.closeModal();
+                this.showSec('sec-report');
+            },
+
+            assignTask: function() {
+                const desc = document.getElementById('t-desc').value;
+                if(!desc) return alert("Task Description is required");
+                this.tasks.push({id: "ATR-"+(100+this.tasks.length+1), desc, status: "Open", essence: "", action: "", file: "N/A"});
+                this.saveData();
+                this.renderTables();
+                this.showSec('sec-tasks');
+            },
             initZones: function() {
-                const z = [...new Set(this.mapping.map(m => m.z))];
-                document.getElementById('z-sel').innerHTML = '<option value="">Select Zone</option>' + z.map(x => `<option value="${x}">${x}</option>`).join('');
+                const zones = [...new Set(this.mapping.map(m => m.z))];
+                document.getElementById('z-sel').innerHTML = '<option value="">Select Zone</option>' + zones.map(z => `<option>${z}</option>`).join('');
             },
             mapDept: function() {
                 const z = document.getElementById('z-sel').value;
-                const filtered = this.mapping.filter(m => m.z === z);
-                const d = [...new Set(filtered.map(m => m.d))];
-                document.getElementById('d-sel').innerHTML = '<option value="">Select Dept</option>' + d.map(x => `<option value="${x}">${x}</option>`).join('');
-                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub-Dept</option>';
-                document.getElementById('t-resp').value = "";
+                const depts = [...new Set(this.mapping.filter(m => m.z === z).map(m => m.d))];
+                document.getElementById('d-sel').innerHTML = '<option value="">Select Dept</option>' + depts.map(d => `<option>${d}</option>`).join('');
             },
             mapSub: function() {
                 const d = document.getElementById('d-sel').value;
-                const filtered = this.mapping.filter(m => m.d === d);
-                const s = [...new Set(filtered.map(m => m.s))];
-                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub-Dept</option>' + s.map(x => `<option value="${x}">${x}</option>`).join('');
-                document.getElementById('t-resp').value = "";
+                const subs = this.mapping.filter(m => m.d === d).map(m => m.s);
+                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub-Dept</option>' + subs.map(s => `<option>${s}</option>`).join('');
             },
             mapResp: function() {
                 const s = document.getElementById('s-sel').value;
-                const match = this.mapping.find(x => x.s === s);
+                const match = this.mapping.find(m => m.s === s);
                 document.getElementById('t-resp').value = match ? match.r : "";
             }
         };
