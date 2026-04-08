@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSAW ATR Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CORE UI */
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;background:#0b1120;color:#dde6f0;display:flex;min-height:100vh;overflow:hidden}
+        .hidden{display:none !important}
+
+        /* LOGIN SCREEN */
+        #view-login{position:fixed;top:0;left:0;width:100%;height:100%;background:#0b1120;z-index:3000;display:flex;align-items:center;justify-content:center}
+        .lcard{background:rgba(14,26,48,.95);border:1px solid rgba(30,111,255,.3);border-radius:22px;padding:40px;width:380px;text-align:center}
+
+        /* SIDEBAR */
+        #sidebar{width:260px;background:#060d1a;border-right:1px solid #152540;display:flex;flex-direction:column}
+        .sb-header{padding:30px 20px;color:#1e6fff;font-weight:700;font-size:20px;border-bottom:1px solid #152540}
+        .menu-item{padding:15px 25px;color:#8899ac;cursor:pointer;font-size:14px;transition:0.2s}
+        .menu-item.active{background:rgba(30,111,255,0.1);color:#1e6fff;border-right:3px solid #1e6fff}
+
+        /* MAIN CONTENT */
+        #main-content{flex-grow:1;overflow-y:auto;height:100vh}
+        .container{padding:30px;max-width:1200px;margin:0 auto}
+        .card{background:#0c1828;border:1px solid #1a3050;border-radius:15px;padding:25px;margin-bottom:25px}
+
+        /* FORM ELEMENTS */
+        label{font-size:11px;color:#4a6a8a;font-weight:700;text-transform:uppercase;display:block;margin-bottom:8px}
+        input, textarea, select{width:100%;background:#0a1426;border:1px solid #1a3050;border-radius:8px;padding:12px;color:#fff;outline:none;margin-bottom:15px}
+        .lbtn{background:linear-gradient(135deg,#1e6fff,#0a4fd4);border:none;border-radius:8px;padding:12px 24px;color:#fff;font-weight:600;cursor:pointer}
+        .review-btn{background:#10b981 !important} /* Green for HOD review */
+
+        /* TABLE */
+        .et{width:100%;border-collapse:collapse}
+        .et th{background:#0a1f3d;color:#4a9eff;padding:12px;text-align:left;font-size:11px;text-transform:uppercase}
+        .et td{padding:12px;border-bottom:1px solid #152540;font-size:13px}
+
+        /* MODAL */
+        .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:2000}
+        .modal-box{background:#0f1a2d;border:1px solid #1e6fff;border-radius:18px;width:600px;max-height:90vh;padding:30px;overflow-y:auto}
+    </style>
+</head>
+<body>
+
+    <div id="view-login">
+        <div class="lcard">
+            <h2 style="margin-bottom:25px">JSAW ATR Portal</h2>
+            <input type="text" id="uid" placeholder="ID (1000 for HOD, 2001 for MID)">
+            <input type="password" id="upw" placeholder="Password (init123)">
+            <button class="lbtn" style="width:100%" onclick="app.login()">Login</button>
+        </div>
+    </div>
+
+    <nav id="sidebar" class="hidden">
+        <div class="sb-header">JINDAL SAW</div>
+        <div class="sb-menu">
+            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">➤ ATR Creator</div>
+            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">➤ Pending Actions</div>
+            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">➤ ATR Report Menu</div>
+            <div class="menu-item" onclick="app.logout()" style="margin-top:30px; color:#ef4444; border-top:1px solid #152540">➤ Log Out</div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="hidden">
+        <div class="container">
+            <div id="sec-creator" class="sec hidden">
+                <div class="card">
+                    <h3 style="color:#1e6fff; margin-bottom:20px">Create New ATR Task</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px">
+                        <div style="grid-column: span 2"><label>Task Description</label><textarea id="t-desc" rows="2"></textarea></div>
+                        <div><label>Zone</label><select id="z-sel" onchange="app.mapDept()"></select></div>
+                        <div><label>Department</label><select id="d-sel" onchange="app.mapSub()"></select></div>
+                        <div><label>Subdepartment</label><select id="s-sel" onchange="app.mapResp()"></select></div>
+                        <div><label>Primary Responsible</label><input type="text" id="t-resp" readonly></div>
+                    </div>
+                    <button class="lbtn" onclick="app.assignTask()">Assign Task</button>
+                </div>
+            </div>
+
+            <div id="sec-tasks" class="sec hidden">
+                <div class="card">
+                    <h3 style="color:#1e6fff; margin-bottom:15px">Current Pending Tasks</h3>
+                    <table class="et">
+                        <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="pending-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="sec-report" class="sec hidden">
+                <div class="card">
+                    <h3 style="color:#1e6fff; margin-bottom:15px">ATR Report History (Closed)</h3>
+                    <table class="et">
+                        <thead><tr><th>ID</th><th>Essence of Work</th><th>Action Taken</th><th>File</th></tr></thead>
+                        <tbody id="report-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-fill" class="modal-bg hidden">
+        <div class="modal-box">
+            <h3 style="color:#fff; margin-bottom:20px">Task: <span id="m-id" style="color:#1e6fff"></span></h3>
+            
+            <div id="mid-fields">
+                <label>Essence of Work*</label><textarea id="inp-essence" rows="3"></textarea>
+                <label>Detailed Action Taken</label><textarea id="inp-action" rows="3"></textarea>
+                <label>Attachment</label><input type="file" id="inp-file" style="padding:8px">
+            </div>
+
+            <div id="hod-fields" class="hidden">
+                <div style="background:rgba(30,111,255,0.05); padding:15px; border-radius:10px; margin-bottom:20px">
+                    <label style="color:#1e6fff">Submitted Essence:</label>
+                    <p id="view-essence" style="font-size:13px; margin-bottom:10px"></p>
+                    <label style="color:#1e6fff">Submitted Action:</label>
+                    <p id="view-action" style="font-size:13px"></p>
+                </div>
+                <label>HOD Remarks / Approval Note</label>
+                <textarea id="inp-remarks" rows="2"></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px">
+                <button id="btn-submit" class="lbtn" style="flex:1" onclick="app.submitAction()">Submit Review</button>
+                <button id="btn-approve" class="lbtn review-btn hidden" style="flex:1" onclick="app.approveAction()">Approve & Close</button>
+                <button class="lbtn" style="background:#334155; flex:1" onclick="app.closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            user: null,
+            activeATR: null,
+            mapping: [
+                {z:"Operations & Projects", d:"CCM", s:"Hot Mould-CCM", r:"Mr. Vikash Pareek"},
+                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"}
+            ],
+            tasks: [],
+
+            init: function() {
+                const saved = localStorage.getItem('jsaw_atr_tasks');
+                this.tasks = saved ? JSON.parse(saved) : [{id: "ATR-101", desc: "Line Maintenance", status: "Open", essence: "", action: "", file: "N/A"}];
+            },
+
+            saveData: function() {
+                localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks));
+            },
+
+            login: function() {
+                const id = document.getElementById('uid').value;
+                if(document.getElementById('upw').value !== "init123") return alert("Wrong PW");
+                this.user = { id, role: id.startsWith('1') ? 'HOD' : 'MID' };
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('sidebar').classList.remove('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                
+                if(this.user.role === 'HOD') {
+                    document.getElementById('m-creator').classList.remove('hidden');
+                    this.initZones();
+                    this.showSec('sec-creator');
+                } else {
+                    document.getElementById('m-creator').classList.add('hidden');
+                    this.showSec('sec-tasks');
+                }
+                this.renderTables();
+            },
+
+            logout: function() { location.reload(); },
+
+            showSec: function(id) {
+                document.querySelectorAll('.sec').forEach(s => s.classList.add('hidden'));
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                document.getElementById(id).classList.remove('hidden');
+                const mId = id.replace('sec-', 'm-');
+                if(document.getElementById(mId)) document.getElementById(mId).classList.add('active');
+            },
+
+            renderTables: function() {
+                const pBody = document.getElementById('pending-body');
+                const rBody = document.getElementById('report-body');
+                pBody.innerHTML = ""; rBody.innerHTML = "";
+
+                this.tasks.forEach(t => {
+                    // PENDING LIST LOGIC
+                    if(t.status === "Open" || t.status === "Review Pending") {
+                        let actionHtml = "";
+                        
+                        if(this.user.role === 'MID') {
+                            actionHtml = t.status === "Open" 
+                                ? `<button class="lbtn" style="padding:6px 12px; font-size:11px" onclick="app.openModal('${t.id}')">Fill Action</button>`
+                                : `<span style="color:#1e6fff">Sent to HOD</span>`;
+                        } else {
+                            // HOD VIEW
+                            actionHtml = t.status === "Review Pending"
+                                ? `<button class="lbtn review-btn" style="padding:6px 12px; font-size:11px" onclick="app.openModal('${t.id}')">Review Action</button>`
+                                : `<span style="color:#4a6a8a">Awaiting Mid-Level</span>`;
+                        }
+
+                        pBody.innerHTML += `<tr><td>${t.id}</td><td>${t.desc}</td><td style="color:${t.status==='Open'?'#ff9f43':'#1e6fff'}">${t.status}</td><td>${actionHtml}</td></tr>`;
+                    } 
+                    // REPORT LIST LOGIC (Only Closed items)
+                    else if(t.status === "Closed") {
+                        rBody.innerHTML += `<tr><td>${t.id}</td><td>${t.essence}</td><td>${t.action}</td><td style="color:#10b981">✔ Closed</td></tr>`;
+                    }
+                });
+            },
+
+            openModal: function(id) {
+                this.activeATR = id;
+                const task = this.tasks.find(x => x.id === id);
+                document.getElementById('m-id').innerText = id;
+                document.getElementById('modal-fill').classList.remove('hidden');
+
+                if(this.user.role === 'HOD') {
+                    document.getElementById('mid-fields').classList.add('hidden');
+                    document.getElementById('hod-fields').classList.remove('hidden');
+                    document.getElementById('btn-submit').classList.add('hidden');
+                    document.getElementById('btn-approve').classList.remove('hidden');
+                    document.getElementById('view-essence').innerText = task.essence;
+                    document.getElementById('view-action').innerText = task.action;
+                } else {
+                    document.getElementById('mid-fields').classList.remove('hidden');
+                    document.getElementById('hod-fields').classList.add('hidden');
+                    document.getElementById('btn-submit').classList.remove('hidden');
+                    document.getElementById('btn-approve').classList.add('hidden');
+                }
+            },
+
+            closeModal: function() { document.getElementById('modal-fill').classList.add('hidden'); },
+
+            submitAction: function() {
+                const essence = document.getElementById('inp-essence').value;
+                if(!essence) return alert("Essence is Mandatory");
+                const task = this.tasks.find(x => x.id === this.activeATR);
+                task.status = "Review Pending";
+                task.essence = essence;
+                task.action = document.getElementById('inp-action').value;
+                this.saveData();
+                this.renderTables();
+                this.closeModal();
+                alert("Submitted to HOD for Review.");
+            },
+
+            approveAction: function() {
+                const task = this.tasks.find(x => x.id === this.activeATR);
+                task.status = "Closed";
+                this.saveData();
+                this.renderTables();
+                this.closeModal();
+                this.showSec('sec-report');
+                alert("ATR Closed Successfully.");
+            },
+
+            assignTask: function() {
+                const desc = document.getElementById('t-desc').value;
+                if(!desc) return alert("Task Description is required");
+                this.tasks.push({id: "ATR-"+(100+this.tasks.length+1), desc, status: "Open", essence: "", action: "", file: "N/A"});
+                this.saveData();
+                this.renderTables();
+                this.showSec('sec-tasks');
+            },
+            initZones: function() {
+                const zones = [...new Set(this.mapping.map(m => m.z))];
+                document.getElementById('z-sel').innerHTML = '<option value="">Select Zone</option>' + zones.map(z => `<option>${z}</option>`).join('');
+            },
+            mapDept: function() {
+                const z = document.getElementById('z-sel').value;
+                const depts = [...new Set(this.mapping.filter(m => m.z === z).map(m => m.d))];
+                document.getElementById('d-sel').innerHTML = '<option value="">Select Dept</option>' + depts.map(d => `<option>${d}</option>`).join('');
+            },
+            mapSub: function() {
+                const d = document.getElementById('d-sel').value;
+                const subs = this.mapping.filter(m => m.d === d).map(m => m.s);
+                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub-Dept</option>' + subs.map(s => `<option>${s}</option>`).join('');
+            },
+            mapResp: function() {
+                const s = document.getElementById('s-sel').value;
+                const match = this.mapping.find(m => m.s === s);
+                document.getElementById('t-resp').value = match ? match.r : "";
+            }
+        };
+        app.init();
+    </script>
+</body>
+</html>
