@@ -11,6 +11,7 @@
         
         body {
             font-family: 'Inter', sans-serif;
+            /* BACKGROUND RESTORED */
             background: linear-gradient(rgba(224, 242, 254, 0.8), rgba(224, 242, 254, 0.8)), 
                         url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=2000');
             background-size: cover;
@@ -18,157 +19,125 @@
             background-attachment: fixed;
             color: #1e3a8a;
             display: flex;
-            align-items: flex-start; /* FIX: Align items to top, not center */
-            justify-content: flex-start; /* FIX: Start from left */
+            align-items: flex-start; /* Aligns content to top */
+            justify-content: flex-start;
             min-height: 100vh;
             width: 100%;
-            overflow-x: hidden;
         }
 
         .hidden{display:none !important}
 
-        /* SIDEBAR - PINNED TO TOP LEFT */
+        /* LOGIN SCREEN */
+        #view-login {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(224, 242, 254, 0.9), rgba(224, 242, 254, 0.9)), 
+                        url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            display: flex; align-items: center; justify-content: center; z-index: 5000;
+        }
+        .lcard {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 24px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 1px solid white;
+        }
+
+        /* SIDEBAR - PINNED TO TOP */
         #sidebar {
             width: 280px;
             min-width: 280px;
             height: 100vh;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             flex-direction: column;
             position: sticky;
             top: 0;
-            left: 0;
             z-index: 1000;
         }
 
         .sb-header {
-            padding: 25px 20px;
+            padding: 30px 20px;
             color: #0369a1;
             font-weight: 800;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 22px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            /* This ensures "JINDAL SAW" stays at the very top */
-            display: block; 
-        }
-
-        .sb-menu {
-            flex-grow: 1;
-            padding-top: 10px;
+            letter-spacing: -0.5px;
         }
 
         .menu-item {
-            padding: 15px 25px;
+            padding: 16px 25px;
             cursor: pointer;
             font-weight: 600;
             color: #334155;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
+            transition: 0.2s;
         }
 
         .menu-item.active {
-            background: rgba(3, 105, 161, 0.1);
+            background: rgba(3, 105, 161, 0.15);
             color: #0369a1;
-            border-right: 4px solid #0369a1;
+            border-right: 5px solid #0369a1;
         }
 
-        /* MAIN CONTENT - STARTS FROM TOP */
+        /* MAIN AREA - START FROM TOP */
         #main-content {
             flex-grow: 1;
-            width: calc(100% - 280px);
             padding: 40px;
             display: flex;
-            flex-direction: column;
-            align-items: center; /* Centers the form horizontally */
-            justify-content: flex-start; /* FIX: Ensures content starts at the top */
+            justify-content: center;
+            align-items: flex-start; /* Ensures content starts at top */
         }
 
         .container {
             width: 100%;
             max-width: 1000px;
-            /* No margin-top auto, so it stays at the top */
         }
 
-        /* GLASS CARD */
         .glass-card {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(15px);
             border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 35px;
+            border: 1px solid white;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        /* FORM STYLING */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        /* GRID & FORMS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        label { 
-            font-size: 11px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: #64748b; 
-            margin-bottom: 6px; 
-            display: block;
-        }
-
+        label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #475569; display: block; margin-bottom: 8px; }
         input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            background: #fff;
-            margin-bottom: 15px;
-            font-size: 14px;
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 12px;
+            background: white; margin-bottom: 15px; font-size: 14px; outline: none;
         }
+        input:focus { border-color: #0369a1; }
 
         .lbtn {
-            background: #0369a1;
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            transition: opacity 0.2s;
+            background: #0369a1; color: white; border: none; padding: 15px;
+            border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;
         }
 
         /* TABLE */
-        .table-wrap { overflow-x: auto; margin-top: 10px; border-radius: 12px; }
-        .et { width: 100%; border-collapse: collapse; min-width: 600px; background: rgba(255,255,255,0.4); }
-        .et th { text-align: left; padding: 15px; background: rgba(3, 105, 161, 0.05); font-size: 12px; color: #0369a1; }
+        .table-wrap { overflow-x: auto; border-radius: 15px; margin-top: 10px; }
+        .et { width: 100%; border-collapse: collapse; min-width: 600px; background: rgba(255,255,255,0.3); }
+        .et th { text-align: left; padding: 15px; background: rgba(3,105,161,0.1); font-size: 11px; color: #0369a1; }
         .et td { padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; }
-
-        /* MOBILE FIXES */
-        @media (max-width: 1024px) {
-            #sidebar { position: fixed; transform: translateX(-100%); height: 100%; }
-            #sidebar.open { transform: translateX(0); }
-            #main-content { width: 100%; padding: 80px 20px 20px 20px; }
-            .grid-2 { grid-template-columns: 1fr; }
-        }
-
-        #view-login {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(224, 242, 254, 1);
-            display: flex; align-items: center; justify-content: center; z-index: 5000;
-        }
     </style>
 </head>
 <body>
 
     <div id="view-login">
-        <div class="glass-card" style="width: 350px; text-align: center;">
-            <h2 style="color: #0369a1; margin-bottom: 20px;">JSAW Portal</h2>
+        <div class="lcard">
+            <h2 style="color:#0369a1; margin-bottom:5px">JINDAL SAW</h2>
+            <p style="font-size:12px; color:#64748b; margin-bottom:25px">ATR Management System</p>
             <input type="text" id="uid" placeholder="Employee ID">
-            <input type="password" id="upw" placeholder="Password">
+            <input type="password" id="upw" placeholder="Password" onkeypress="if(event.key === 'Enter') app.login()">
             <button class="lbtn" onclick="app.login()">Login</button>
         </div>
     </div>
@@ -178,8 +147,8 @@
         <div class="sb-menu">
             <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">Create ATR Task</div>
             <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">Pending Actions</div>
-            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">History Report</div>
-            <div class="menu-item" onclick="location.reload()" style="color:#ef4444; margin-top:20px; border-top:1px solid rgba(0,0,0,0.05)">Logout</div>
+            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">ATR History</div>
+            <div class="menu-item" onclick="location.reload()" style="color:#ef4444; margin-top:30px">Logout</div>
         </div>
     </nav>
 
@@ -188,43 +157,29 @@
             
             <div id="sec-creator" class="sec hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom:20px; color: #0369a1;">Assign New Task</h2>
+                    <h3 style="margin-bottom:25px; color:#0369a1">Assign New Task</h3>
                     <div class="grid-2">
                         <div style="grid-column: span 2">
-                            <label>Description of ATR</label>
-                            <textarea id="t-desc" rows="3" placeholder="Describe the required action..."></textarea>
+                            <label>Task Description</label>
+                            <textarea id="t-desc" rows="2" placeholder="What needs to be done?"></textarea>
                         </div>
-                        <div>
-                            <label>Zone</label>
-                            <select id="z-sel" onchange="app.mapDept()">
-                                <option value="">Select Zone</option>
-                                <option>Operations & Projects</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Department</label>
-                            <select id="d-sel" onchange="app.mapSub()">
-                                <option value="">Select Dept</option>
-                            </select>
-                        </div>
-                        <div><label>Subdepartment</label><select id="s-sel"></select></div>
+                        <div><label>Zone</label><select id="z-sel" onchange="app.mapDept()"></select></div>
+                        <div><label>Department</label><select id="d-sel" onchange="app.mapSub()"></select></div>
+                        <div><label>Sub-Department</label><select id="s-sel" onchange="app.mapResp()"></select></div>
                         <div><label>Target Date</label><input type="date"></div>
+                        <div style="grid-column: span 2"><label>Responsible Person</label><input type="text" id="t-resp" readonly placeholder="Auto-mapped..."></div>
                     </div>
-                    <button class="lbtn" onclick="app.showSec('sec-tasks')">Assign Task</button>
+                    <button class="lbtn" onclick="app.assignTask()">Assign ATR</button>
                 </div>
             </div>
 
             <div id="sec-tasks" class="sec hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom:20px; color: #0369a1;">Pending Task List</h2>
+                    <h3 style="margin-bottom:20px; color:#0369a1">Pending Actions</h3>
                     <div class="table-wrap">
                         <table class="et">
-                            <thead>
-                                <tr><th>ATR ID</th><th>Task</th><th>Responsibility</th><th>Status</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>ATR-901</td><td>CCM Maintenance</td><td>Vikash Pareek</td><td><span style="color:#f59e0b">Open</span></td></tr>
-                            </tbody>
+                            <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="pending-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -235,35 +190,86 @@
 
     <script>
         const app = {
+            user: null, tasks: [],
+            mapping: [
+                {z:"Operations & Projects", d:"CCM", s:"Hot Mould-CCM", r:"Mr. Vikash Pareek"},
+                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"}
+            ],
+
+            init: function() {
+                const saved = localStorage.getItem('jsaw_atr_tasks');
+                this.tasks = saved ? JSON.parse(saved) : [];
+                this.initZones();
+            },
+
             login: function() {
                 const id = document.getElementById('uid').value;
-                if(!id) return alert("Enter ID");
+                if(!id) return alert("Please enter User ID");
+                this.user = { id, role: id.startsWith('1') ? 'HOD' : 'MID' };
+                
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('sidebar').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
                 
-                if(id.startsWith('1')) {
+                if(this.user.role === 'HOD') {
                     document.getElementById('m-creator').classList.remove('hidden');
                     this.showSec('sec-creator');
                 } else {
                     this.showSec('sec-tasks');
                 }
+                this.renderTables();
             },
+
             showSec: function(id) {
                 document.querySelectorAll('.sec').forEach(s => s.classList.add('hidden'));
                 document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
                 document.getElementById(id).classList.remove('hidden');
                 const mId = id.replace('sec-', 'm-');
                 if(document.getElementById(mId)) document.getElementById(mId).classList.add('active');
-                window.scrollTo(0,0); // FIX: Ensure page starts at top when switching
+                window.scrollTo(0,0);
             },
+
+            initZones: function() {
+                const zones = [...new Set(this.mapping.map(m => m.z))];
+                document.getElementById('z-sel').innerHTML = '<option value="">Select Zone</option>' + zones.map(z => `<option>${z}</option>`).join('');
+            },
+
             mapDept: function() {
-                document.getElementById('d-sel').innerHTML = '<option>CCM</option><option>Quality</option>';
+                const z = document.getElementById('z-sel').value;
+                const depts = [...new Set(this.mapping.filter(m => m.z === z).map(m => m.d))];
+                document.getElementById('d-sel').innerHTML = '<option value="">Select Dept</option>' + depts.map(d => `<option>${d}</option>`).join('');
             },
+
             mapSub: function() {
-                document.getElementById('s-sel').innerHTML = '<option>Maintenance</option><option>Lab</option>';
+                const d = document.getElementById('d-sel').value;
+                const subs = this.mapping.filter(m => m.d === d).map(m => m.s);
+                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub</option>' + subs.map(s => `<option>${s}</option>`).join('');
+            },
+
+            mapResp: function() {
+                const s = document.getElementById('s-sel').value;
+                const match = this.mapping.find(m => m.s === s);
+                document.getElementById('t-resp').value = match ? match.r : "";
+            },
+
+            assignTask: function() {
+                const desc = document.getElementById('t-desc').value;
+                if(!desc) return alert("Enter task description");
+                this.tasks.push({id: "ATR-"+Math.floor(Math.random()*900+100), desc, status: "Open"});
+                localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks));
+                this.renderTables();
+                this.showSec('sec-tasks');
+                document.getElementById('t-desc').value = "";
+            },
+
+            renderTables: function() {
+                const body = document.getElementById('pending-body');
+                body.innerHTML = this.tasks.map(t => `
+                    <tr><td>${t.id}</td><td>${t.desc}</td><td><span style="color:#f59e0b;font-weight:700">${t.status}</span></td><td><button style="padding:5px 10px; cursor:pointer">View</button></td></tr>
+                `).join('');
             }
         };
+        app.init();
     </script>
 </body>
 </html>
