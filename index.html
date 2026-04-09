@@ -11,170 +11,207 @@
         
         body {
             font-family: 'Inter', sans-serif;
+            /* JINDAL SAW THEMED INDUSTRIAL BACKGROUND */
             background: linear-gradient(rgba(224, 242, 254, 0.75), rgba(224, 242, 254, 0.75)), 
                         url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=2000');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: #1e3a8a;
-            display: flex; /* Key for Sidebar/Main alignment */
+            display: flex;
             min-height: 100vh;
-            width: 100vw;
             overflow-x: hidden;
         }
 
         .hidden{display:none !important}
 
-        /* SIDEBAR ALIGNMENT */
+        /* GLASSMORPHISM - TRANSLUCENT CARDS */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* LOGIN SCREEN */
+        #view-login {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .lcard { border-radius: 28px; padding: 45px; width: 100%; max-width: 400px; text-align: center; }
+
+        /* SIDEBAR (Responsive) */
         #sidebar {
-            width: 280px;
-            min-width: 280px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.55);
+            width: 260px;
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             flex-direction: column;
-            position: sticky;
-            top: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
-            transition: transform 0.3s ease;
         }
 
-        /* MAIN CONTENT ALIGNMENT */
-        #main-content {
-            flex-grow: 1;
-            width: calc(100% - 280px); /* Ensures it takes remaining space */
-            min-height: 100vh;
-            overflow-y: auto;
-        }
-
-        .container {
-            padding: 40px;
-            max-width: 1100px;
-            margin: 0 auto; /* Centers the form in the right area */
-        }
-
-        /* MOBILE RESPONSIVENESS */
-        @media (max-width: 1024px) {
+        /* SIDEBAR MOBILE STATE */
+        @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
                 left: 0;
-                transform: translateX(-100%);
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%); /* Hidden by default on mobile */
             }
             #sidebar.open {
-                transform: translateX(0);
-            }
-            #main-content {
-                width: 100%;
-                padding-top: 60px; /* Space for mobile nav */
-            }
-            .container {
-                padding: 20px;
+                transform: translateX(0); /* Slide in */
             }
         }
 
-        /* MOBILE HEADER */
-        .mobile-nav {
-            display: none;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 900;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        @media (max-width: 1024px) { .mobile-nav { display: flex; } }
-
-        /* GLASS CARD STYLING */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(31, 38, 135, 0.1);
-        }
-
-        /* FORM GRID */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .grid-2 { grid-template-columns: 1fr; }
-        }
-
-        /* ELEMENTS */
         .sb-header {
             padding: 30px 20px;
             color: #0369a1;
             font-weight: 800;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .menu-item {
             padding: 16px 25px;
+            color: #334155;
             cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
             font-weight: 600;
-            transition: 0.2s;
         }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.3); }
         .menu-item.active {
-            background: rgba(3, 105, 161, 0.15);
+            background: rgba(3, 105, 161, 0.2);
             color: #0369a1;
-            border-right: 5px solid #0369a1;
+            border-right: 6px solid #0369a1;
         }
 
-        label { font-size: 11px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 8px; color: #475569; }
+        /* MOBILE NAVIGATION BAR */
+        .mobile-nav {
+            display: none;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            position: sticky; top: 0; z-index: 900;
+            align-items: center; justify-content: space-between;
+        }
+
+        @media (max-width: 768px) { .mobile-nav { display: flex; } }
+
+        /* MAIN CONTENT */
+        #main-content { flex-grow: 1; overflow-y: auto; height: 100vh; width: 100%; }
+        .container { padding: 30px; max-width: 1250px; margin: 0 auto; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            #main-content { height: auto; }
+        }
+
+        .card { border-radius: 24px; padding: 30px; margin-bottom: 30px; }
+
+        /* GRID SYSTEM (Responsive) */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; } /* Stack on mobile */
+        }
+
+        /* FORM ELEMENTS */
+        label { font-size: 11px; color: #475569; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 10px; letter-spacing: 0.8px; }
         input, textarea, select {
             width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(3, 105, 161, 0.2);
-            background: white;
-            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(3, 105, 161, 0.25);
+            border-radius: 14px;
+            padding: 14px;
+            color: #1e3a8a;
+            outline: none;
+            margin-bottom: 18px;
+            font-size: 14px;
         }
+        
+        /* TABLE WRAPPER (Responsive) */
+        .table-wrap { 
+            width: 100%; 
+            overflow-x: auto; /* Enable horizontal scroll for small screens */
+            border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .et { width: 100%; border-collapse: collapse; min-width: 650px; }
+        .et th { background: rgba(3, 105, 161, 0.15); color: #0369a1; padding: 18px; text-align: left; font-size: 11px; text-transform: uppercase; font-weight: 800; }
+        .et td { padding: 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.3); font-size: 14px; color: #334155; font-weight: 500; }
+
+        /* MODAL (Responsive) */
+        .modal-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px;
+        }
+        .modal-box {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            width: 100%; max-width: 650px;
+            max-height: 90vh; /* Don't exceed screen height */
+            padding: 40px;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) { .modal-box { padding: 25px; border-radius: 20px; } }
 
         .lbtn {
-            background: #0369a1;
-            color: white;
+            background: linear-gradient(135deg, #0ea5e9, #0369a1);
             border: none;
-            padding: 15px 25px;
-            border-radius: 12px;
+            border-radius: 14px;
+            padding: 15px 28px;
+            color: #fff;
             font-weight: 700;
             cursor: pointer;
-            width: 100%;
+            box-shadow: 0 6px 20px rgba(3, 105, 161, 0.3);
+            transition: transform 0.2s;
+            text-align: center;
         }
-
-        /* TABLE */
-        .table-wrap { overflow-x: auto; margin-top: 10px; border-radius: 15px; }
-        .et { width: 100%; border-collapse: collapse; min-width: 600px; }
-        .et th { text-align: left; padding: 15px; background: rgba(3, 105, 161, 0.1); font-size: 11px; }
-        .et td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.4); font-size: 14px; }
+        .lbtn:active { transform: scale(0.98); }
+        .review-btn { background: linear-gradient(135deg, #10b981, #059669) !important; }
     </style>
 </head>
 <body>
 
+    <div id="view-login">
+        <div class="lcard glass-card">
+            <h2 style="margin-bottom:10px; color:#0369a1; font-weight:800">JINDAL SAW</h2>
+            <p style="margin-bottom:30px; font-size: 14px; color: #475569; font-weight: 500">ATR Management Portal</p>
+            <input type="text" id="uid" placeholder="User ID">
+            <input type="password" id="upw" placeholder="Password">
+            <button class="lbtn" style="width:100%" onclick="app.login()">Login to Portal</button>
+        </div>
+    </div>
+
     <div class="mobile-nav hidden" id="mob-nav">
-        <div style="font-size:24px; cursor:pointer" onclick="app.toggleSidebar()">☰</div>
-        <div style="font-weight:800; color:#0369a1">JINDAL SAW</div>
+        <div style="font-size:26px; cursor:pointer; color: #0369a1" onclick="app.toggleSidebar()">☰</div>
+        <div style="color:#0369a1; font-weight:800; font-size: 18px">JINDAL SAW</div>
         <div></div>
     </div>
 
     <nav id="sidebar" class="hidden">
-        <div class="sb-header">JINDAL SAW</div>
+        <div class="sb-header">
+            <span>JINDAL SAW</span>
+            <span style="cursor:pointer; font-size: 24px;" onclick="app.toggleSidebar()">✕</span>
+        </div>
         <div class="sb-menu">
-            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">➤ Create ATR</div>
-            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">➤ Tasks</div>
-            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">➤ Reports</div>
-            <div class="menu-item" onclick="app.logout()" style="color:#ef4444; margin-top:20px">➤ Logout</div>
+            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">➤ ATR Creator</div>
+            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">➤ Pending Actions</div>
+            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">➤ ATR Report Menu</div>
+            <div class="menu-item" onclick="app.logout()" style="margin-top:40px; color:#ef4444; border-top:1px solid rgba(255,255,255,0.4)">➤ Log Out</div>
         </div>
     </nav>
 
@@ -182,28 +219,28 @@
         <div class="container">
             
             <div id="sec-creator" class="sec hidden">
-                <div class="glass-card">
-                    <h2 style="margin-bottom:20px">Create New ATR</h2>
+                <div class="card glass-card">
+                    <h3 style="color:#0369a1; margin-bottom:25px; font-weight: 800">Create New ATR Task</h3>
                     <div class="grid-2">
-                        <div style="grid-column: span 2">
+                        <div style="grid-column: span 1;" class="full-width-mob">
                             <label>Task Description</label>
-                            <textarea id="t-desc" rows="2"></textarea>
+                            <textarea id="t-desc" rows="2" placeholder="Describe the task..."></textarea>
                         </div>
                         <div><label>Zone</label><select id="z-sel" onchange="app.mapDept()"></select></div>
                         <div><label>Department</label><select id="d-sel" onchange="app.mapSub()"></select></div>
                         <div><label>Subdepartment</label><select id="s-sel" onchange="app.mapResp()"></select></div>
                         <div><label>Primary Responsible</label><input type="text" id="t-resp" readonly></div>
                     </div>
-                    <button class="lbtn" onclick="app.assignTask()">Assign Task</button>
+                    <button class="lbtn" style="width:100%; margin-top: 10px" onclick="app.assignTask()">Assign Task Now</button>
                 </div>
             </div>
 
             <div id="sec-tasks" class="sec hidden">
-                <div class="glass-card">
-                    <h2 style="margin-bottom:20px">Pending Tasks</h2>
+                <div class="card glass-card">
+                    <h3 style="color:#0369a1; margin-bottom:20px; font-weight: 800">Pending ATR Actions</h3>
                     <div class="table-wrap">
                         <table class="et">
-                            <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Action</th></tr></thead>
+                            <thead><tr><th>ID</th><th>Task Description</th><th>Status</th><th>Action</th></tr></thead>
                             <tbody id="pending-body"></tbody>
                         </table>
                     </div>
@@ -211,76 +248,171 @@
             </div>
 
             <div id="sec-report" class="sec hidden">
-                <div class="glass-card">
-                    <h2 style="margin-bottom:20px">History</h2>
+                <div class="card glass-card">
+                    <h3 style="color:#0369a1; margin-bottom:20px; font-weight: 800">Action History (Closed)</h3>
                     <div class="table-wrap">
                         <table class="et">
-                            <thead><tr><th>ID</th><th>Essence</th><th>Action</th><th>Status</th></tr></thead>
+                            <thead><tr><th>ID</th><th>Essence</th><th>Action Taken</th><th>Status</th></tr></thead>
                             <tbody id="report-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
-    <div id="view-login">
-        <div class="glass-card" style="width:360px; text-align:center">
-            <h2 style="color:#0369a1; margin-bottom:20px">JSAW Portal</h2>
-            <input type="text" id="uid" placeholder="User ID">
-            <input type="password" id="upw" placeholder="Password">
-            <button class="lbtn" onclick="app.login()">Login</button>
+    <div id="modal-fill" class="modal-bg hidden">
+        <div class="modal-box">
+            <h3 style="color:#0369a1; margin-bottom:25px; font-weight: 800">Task Review: <span id="m-id" style="color:#0ea5e9"></span></h3>
+            
+            <div id="mid-fields">
+                <label>Essence of Work*</label><textarea id="inp-essence" rows="3"></textarea>
+                <label>Detailed Action Taken</label><textarea id="inp-action" rows="3"></textarea>
+                <label>Attachment</label><input type="file" id="inp-file" style="padding:10px">
+            </div>
+
+            <div id="hod-fields" class="hidden">
+                <div style="background:rgba(3, 105, 161, 0.04); padding:20px; border-radius:18px; margin-bottom:25px; border: 1px solid rgba(3, 105, 161, 0.1)">
+                    <label style="color: #0369a1">Submitted Essence:</label><p id="view-essence" style="font-size:14px; margin-bottom:15px;"></p>
+                    <label style="color: #0369a1">Submitted Action:</label><p id="view-action" style="font-size:14px;"></p>
+                </div>
+                <label>HOD Remarks</label><textarea id="inp-remarks" rows="2"></textarea>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px">
+                <button id="btn-submit" class="lbtn" onclick="app.submitAction()">Submit for Approval</button>
+                <button id="btn-approve" class="lbtn review-btn hidden" onclick="app.approveAction()">Approve & Close</button>
+                <button class="lbtn" style="background:#64748b; box-shadow:none;" onclick="app.closeModal()">Cancel</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Same logic as before, just ensuring sidebar/content toggle correctly
         const app = {
-            user: null, tasks: [],
-            mapping: [{z:"Operations", d:"CCM", s:"Mould", r:"Vikash Pareek"}],
-            
+            user: null,
+            mapping: [
+                {z:"Operations & Projects", d:"CCM", s:"Hot Mould-CCM", r:"Mr. Vikash Pareek"},
+                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"}
+            ],
+            tasks: [],
+
             init: function() {
                 const saved = localStorage.getItem('jsaw_atr_tasks');
-                this.tasks = saved ? JSON.parse(saved) : [];
+                this.tasks = saved ? JSON.parse(saved) : [{id: "ATR-101", desc: "Line Maintenance", status: "Open", essence: "", action: ""}];
             },
+
             toggleSidebar: function() {
                 document.getElementById('sidebar').classList.toggle('open');
             },
+
             login: function() {
                 const id = document.getElementById('uid').value;
+                if(!id) return alert("Enter ID");
                 this.user = { id, role: id.startsWith('1') ? 'HOD' : 'MID' };
+                
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('sidebar').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
                 document.getElementById('mob-nav').classList.remove('hidden');
+                
                 if(this.user.role === 'HOD') {
                     document.getElementById('m-creator').classList.remove('hidden');
                     this.initZones(); this.showSec('sec-creator');
                 } else { this.showSec('sec-tasks'); }
                 this.renderTables();
             },
+
             showSec: function(id) {
                 document.querySelectorAll('.sec').forEach(s => s.classList.add('hidden'));
                 document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
                 document.getElementById(id).classList.remove('hidden');
                 const mId = id.replace('sec-', 'm-');
                 if(document.getElementById(mId)) document.getElementById(mId).classList.add('active');
-                if(window.innerWidth <= 1024) document.getElementById('sidebar').classList.remove('open');
+                
+                // On mobile, close sidebar after clicking a menu item
+                if(window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
             },
+
             renderTables: function() {
                 const pBody = document.getElementById('pending-body');
-                pBody.innerHTML = this.tasks.map(t => `<tr><td>${t.id}</td><td>${t.desc}</td><td>${t.status}</td><td>Action</td></tr>`).join('');
+                const rBody = document.getElementById('report-body');
+                pBody.innerHTML = ""; rBody.innerHTML = "";
+                
+                this.tasks.forEach(t => {
+                    if(t.status === "Open" || t.status === "Review Pending") {
+                        let canEdit = (this.user.role === 'MID' && t.status === 'Open') || (this.user.role === 'HOD' && t.status === 'Review Pending');
+                        let actionHtml = canEdit ? `<button class="lbtn" onclick="app.openModal('${t.id}')">Action</button>` : `<span style="color:#64748b">${t.status}</span>`;
+                        pBody.innerHTML += `<tr><td>${t.id}</td><td>${t.desc}</td><td>${t.status}</td><td>${actionHtml}</td></tr>`;
+                    } else {
+                        rBody.innerHTML += `<tr><td>${t.id}</td><td>${t.essence}</td><td>${t.action}</td><td>✔</td></tr>`;
+                    }
+                });
             },
+
+            openModal: function(id) {
+                this.activeATR = id; const t = this.tasks.find(x => x.id === id);
+                document.getElementById('m-id').innerText = id;
+                document.getElementById('modal-fill').classList.remove('hidden');
+                if(this.user.role === 'HOD') {
+                    document.getElementById('mid-fields').classList.add('hidden');
+                    document.getElementById('hod-fields').classList.remove('hidden');
+                    document.getElementById('btn-submit').classList.add('hidden');
+                    document.getElementById('btn-approve').classList.remove('hidden');
+                    document.getElementById('view-essence').innerText = t.essence;
+                    document.getElementById('view-action').innerText = t.action;
+                } else {
+                    document.getElementById('mid-fields').classList.remove('hidden');
+                    document.getElementById('hod-fields').classList.add('hidden');
+                    document.getElementById('btn-submit').classList.remove('hidden');
+                    document.getElementById('btn-approve').classList.add('hidden');
+                }
+            },
+
+            closeModal: function() { document.getElementById('modal-fill').classList.add('hidden'); },
+
+            submitAction: function() {
+                const t = this.tasks.find(x => x.id === this.activeATR);
+                t.status = "Review Pending";
+                t.essence = document.getElementById('inp-essence').value;
+                t.action = document.getElementById('inp-action').value;
+                this.saveData(); this.renderTables(); this.closeModal();
+            },
+
+            approveAction: function() {
+                const t = this.tasks.find(x => x.id === this.activeATR);
+                t.status = "Closed";
+                this.saveData(); this.renderTables(); this.closeModal(); this.showSec('sec-report');
+            },
+
             assignTask: function() {
-                const desc = document.getElementById('t-desc').value;
-                this.tasks.push({id:"ATR-"+Date.now().toString().slice(-3), desc, status:"Open"});
-                localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks));
-                this.renderTables(); this.showSec('sec-tasks');
+                const d = document.getElementById('t-desc').value;
+                this.tasks.push({id:"ATR-"+(100+this.tasks.length+1), desc:d, status:"Open", essence:"", action:""});
+                this.saveData(); this.renderTables(); this.showSec('sec-tasks');
+                document.getElementById('t-desc').value = "";
             },
+
             initZones: function() {
-                document.getElementById('z-sel').innerHTML = '<option>Operations</option>';
+                const zones = [...new Set(this.mapping.map(m => m.z))];
+                document.getElementById('z-sel').innerHTML = '<option value="">Zone</option>' + zones.map(z => `<option>${z}</option>`).join('');
             },
+            mapDept: function() {
+                const z = document.getElementById('z-sel').value;
+                const depts = [...new Set(this.mapping.filter(m => m.z === z).map(m => m.d))];
+                document.getElementById('d-sel').innerHTML = '<option value="">Dept</option>' + depts.map(d => `<option>${d}</option>`).join('');
+            },
+            mapSub: function() {
+                const d = document.getElementById('d-sel').value;
+                const subs = this.mapping.filter(m => m.d === d).map(m => m.s);
+                document.getElementById('s-sel').innerHTML = '<option value="">Sub</option>' + subs.map(s => `<option>${s}</option>`).join('');
+            },
+            mapResp: function() {
+                const s = document.getElementById('s-sel').value;
+                const match = this.mapping.find(m => m.s === s);
+                document.getElementById('t-resp').value = match ? match.r : "";
+            },
+            saveData: function() { localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks)); },
             logout: function() { location.reload(); }
         };
         app.init();
