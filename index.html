@@ -1,275 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSAW ATR Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* CORE RESET */
-        *{box-sizing:border-box;margin:0;padding:0}
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            /* BACKGROUND RESTORED */
-            background: linear-gradient(rgba(224, 242, 254, 0.8), rgba(224, 242, 254, 0.8)), 
-                        url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #1e3a8a;
-            display: flex;
-            align-items: flex-start; /* Aligns content to top */
-            justify-content: flex-start;
-            min-height: 100vh;
-            width: 100%;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application Portfolio — Live Systems Registry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0f14;
+    --bg-raised: #121822;
+    --panel: #161d29;
+    --panel-2: #1b2330;
+    --border: #263041;
+    --border-soft: #1e2734;
+    --text: #e7edf5;
+    --text-dim: #9aa9bd;
+    --text-faint: #5f6f85;
+    --live: #34d399;
+    --live-glow: rgba(52,211,153,0.18);
+    --dev: #f0b429;
+    --dev-glow: rgba(240,180,41,0.16);
+    --accent: #4fd1ff;
+    --accent-dim: #1c4a5c;
+    --danger: #f87171;
+    --radius: 10px;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
 
-        .hidden{display:none !important}
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(79,209,255,0.06), transparent 40%),
+      radial-gradient(circle at 85% 10%, rgba(52,211,153,0.05), transparent 35%);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
 
-        /* LOGIN SCREEN */
-        #view-login {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(224, 242, 254, 0.9), rgba(224, 242, 254, 0.9)), 
-                        url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            display: flex; align-items: center; justify-content: center; z-index: 5000;
-        }
-        .lcard {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 24px;
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            border: 1px solid white;
-        }
+  ::selection{ background: var(--accent-dim); color: var(--text); }
 
-        /* SIDEBAR - PINNED TO TOP */
-        #sidebar {
-            width: 280px;
-            min-width: 280px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            flex-direction: column;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+  /* ---------- Scanline signature header ---------- */
+  .topbar{
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--bg-raised), var(--bg));
+    padding: 22px clamp(16px, 4vw, 48px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+  }
+  .topbar-inner{
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand-mark{
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #2c7a94);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--mono); font-weight:700; color:#04141b; font-size:14px;
+    box-shadow: 0 0 0 1px rgba(79,209,255,0.35), 0 8px 20px -6px rgba(79,209,255,0.4);
+    flex-shrink:0;
+  }
+  .brand h1{
+    font-size: 19px;
+    margin:0;
+    letter-spacing: -0.01em;
+    font-weight: 800;
+  }
+  .brand p{
+    margin: 2px 0 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    letter-spacing: 0.03em;
+  }
+  .topbar-meta{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text-dim);
+    text-align: right;
+    line-height: 1.6;
+  }
+  .topbar-meta .live-dot{
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background: var(--live); margin-right:6px;
+    box-shadow: 0 0 8px var(--live);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; } 50%{ opacity:0.35; }
+  }
 
-        .sb-header {
-            padding: 30px 20px;
-            color: #0369a1;
-            font-weight: 800;
-            font-size: 22px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            letter-spacing: -0.5px;
-        }
+  .wrap{
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px clamp(16px, 4vw, 48px) 60px;
+  }
 
-        .menu-item {
-            padding: 16px 25px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #334155;
-            transition: 0.2s;
-        }
+  /* ---------- Stat strip ---------- */
+  .stats{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .stat{
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background: var(--stat-color, var(--accent));
+    opacity:0.7;
+  }
+  .stat .n{
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height:1;
+  }
+  .stat .l{
+    margin-top:8px;
+    font-size: 11.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .stat.live{ --stat-color: var(--live); }
+  .stat.live .n{ color: var(--live); }
+  .stat.dev{ --stat-color: var(--dev); }
+  .stat.dev .n{ color: var(--dev); }
 
-        .menu-item.active {
-            background: rgba(3, 105, 161, 0.15);
-            color: #0369a1;
-            border-right: 5px solid #0369a1;
-        }
+  /* ---------- Filter bar ---------- */
+  .filters{
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 0.9fr auto;
+    gap: 10px;
+    align-items: end;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .field label{
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-faint);
+    font-family: var(--mono);
+  }
+  .field input, .field select{
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 7px;
+    padding: 9px 10px;
+    font-size: 13.5px;
+    font-family: var(--sans);
+    outline: none;
+    width: 100%;
+    transition: border-color .15s;
+  }
+  .field input::placeholder{ color: var(--text-faint); }
+  .field input:focus, .field select:focus{ border-color: var(--accent); }
+  .field select{ cursor:pointer; }
+  .reset-btn{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-family: var(--mono);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .reset-btn:hover{ border-color: var(--danger); color: var(--danger); }
 
-        /* MAIN AREA - START FROM TOP */
-        #main-content {
-            flex-grow: 1;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Ensures content starts at top */
-        }
+  /* ---------- Toolbar row: count + actions ---------- */
+  .toolbar{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .result-count{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+  .result-count b{ color: var(--accent); font-weight:600; }
+  .actions{ display:flex; gap:8px; }
+  .btn{
+    display:flex; align-items:center; gap:7px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 13px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-family: var(--sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn:hover{ border-color: var(--accent); color: var(--accent); }
+  .btn svg{ width:14px; height:14px; }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-        }
+  /* ---------- Table ---------- */
+  .table-shell{
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .table-scroll{ overflow-x: auto; }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 980px;
+  }
+  thead th{
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    background: var(--bg-raised);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  thead th.sortable{ cursor: pointer; user-select:none; }
+  thead th.sortable:hover{ color: var(--accent); }
+  thead th .arrow{ margin-left:4px; opacity:0.5; font-size:9px; }
+  tbody tr{
+    border-bottom: 1px solid var(--border-soft);
+    transition: background .1s;
+    cursor: pointer;
+  }
+  tbody tr:hover{ background: var(--panel-2); }
+  tbody tr.expanded{ background: var(--panel-2); }
+  td{
+    padding: 11px 14px;
+    vertical-align: top;
+    color: var(--text);
+  }
+  td.sno{ font-family: var(--mono); color: var(--text-faint); font-size:12px; }
+  td.appname{ font-weight: 600; max-width: 260px; }
+  td .sub{ display:block; font-size:11px; color: var(--text-faint); font-weight:400; margin-top:2px; }
+  td.mono{ font-family: var(--mono); font-size:12px; color: var(--text-dim); }
+  .badge{
+    display: inline-flex; align-items:center; gap:5px;
+    padding: 3px 9px 3px 7px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: var(--mono);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .badge .dot{ width:6px; height:6px; border-radius:50%; }
+  .badge.live{ background: var(--live-glow); color: var(--live); }
+  .badge.live .dot{ background: var(--live); box-shadow: 0 0 6px var(--live); }
+  .badge.dev{ background: var(--dev-glow); color: var(--dev); }
+  .badge.dev .dot{ background: var(--dev); }
+  .url-link{
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+  .url-link:hover{ text-decoration: underline; }
+  .expand-row td{
+    background: var(--bg-raised);
+    padding: 0;
+  }
+  .expand-inner{
+    padding: 16px 20px 20px 46px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px 24px;
+  }
+  .exp-field .k{
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+  }
+  .exp-field .v{
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-word;
+  }
+  .exp-field .v.mono{ font-family: var(--mono); font-size:12px; color: var(--accent); }
+  .exp-field .v.empty{ color: var(--text-faint); font-style: italic; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 35px;
-            border: 1px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
+  .empty-state{
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-faint);
+  }
+  .empty-state .big{ font-size: 32px; margin-bottom:10px; }
 
-        /* GRID & FORMS */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  footer{
+    max-width: 1400px;
+    margin: 30px auto 0;
+    padding: 0 clamp(16px, 4vw, 48px);
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 11px;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 
-        label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #475569; display: block; margin-bottom: 8px; }
-        input, select, textarea {
-            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 12px;
-            background: white; margin-bottom: 15px; font-size: 14px; outline: none;
-        }
-        input:focus { border-color: #0369a1; }
+  /* ---------- Print styles ---------- */
+  @media print{
+    body{ background: #fff !important; color:#111 !important; }
+    .topbar{ position: static; background:#fff; border-color:#ccc; }
+    .brand-mark{ box-shadow:none; }
+    .filters, .toolbar .actions, .reset-btn{ display:none !important; }
+    .stat{ break-inside: avoid; border-color:#ccc; background:#f7f7f7; }
+    .stat .n, .brand h1{ color:#111 !important; }
+    .table-shell{ border-color:#ccc; }
+    thead th{ background:#eee !important; color:#333 !important; position: static; }
+    tbody tr:hover{ background:none; }
+    td{ color:#111 !important; }
+    .badge.live{ background:#e6f9f1 !important; color:#0a8a5c !important; }
+    .badge.dev{ background:#fdf3d9 !important; color:#8a6a06 !important; }
+    .expand-inner{ display:grid !important; }
+    .expand-row{ display: table-row !important; }
+    a{ color:#0a5a8a !important; }
+  }
 
-        .lbtn {
-            background: #0369a1; color: white; border: none; padding: 15px;
-            border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;
-        }
-
-        /* TABLE */
-        .table-wrap { overflow-x: auto; border-radius: 15px; margin-top: 10px; }
-        .et { width: 100%; border-collapse: collapse; min-width: 600px; background: rgba(255,255,255,0.3); }
-        .et th { text-align: left; padding: 15px; background: rgba(3,105,161,0.1); font-size: 11px; color: #0369a1; }
-        .et td { padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; }
-    </style>
+  @media (max-width: 980px){
+    .filters{ grid-template-columns: 1fr 1fr; }
+    .stats{ grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
 </head>
 <body>
 
-    <div id="view-login">
-        <div class="lcard">
-            <h2 style="color:#0369a1; margin-bottom:5px">JINDAL SAW</h2>
-            <p style="font-size:12px; color:#64748b; margin-bottom:25px">ATR Management System</p>
-            <input type="text" id="uid" placeholder="Employee ID">
-            <input type="password" id="upw" placeholder="Password" onkeypress="if(event.key === 'Enter') app.login()">
-            <button class="lbtn" onclick="app.login()">Login</button>
-        </div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">JS</div>
+      <div>
+        <h1>Application Portfolio Registry</h1>
+        <p>IN-HOUSE SYSTEMS &middot; JINDAL SAW &middot; INFRASTRUCTURE &amp; DEVELOPMENT TRACKER</p>
+      </div>
     </div>
+    <div class="topbar-meta">
+      <div id="sync-status"><span class="live-dot"></span>Connecting to Google Sheet…</div>
+      <div id="generated-on">Generated —</div>
+      <div><a class="url-link" id="sheet-link" href="#" target="_blank" rel="noopener">Open master sheet ↗</a></div>
+    </div>
+  </div>
+</div>
 
-    <nav id="sidebar" class="hidden">
-        <div class="sb-header">JINDAL SAW</div>
-        <div class="sb-menu">
-            <div id="m-creator" class="menu-item hidden" onclick="app.showSec('sec-creator')">Create ATR Task</div>
-            <div id="m-tasks" class="menu-item" onclick="app.showSec('sec-tasks')">Pending Actions</div>
-            <div id="m-report" class="menu-item" onclick="app.showSec('sec-report')">ATR History</div>
-            <div class="menu-item" onclick="location.reload()" style="color:#ef4444; margin-top:30px">Logout</div>
-        </div>
-    </nav>
+<div class="wrap">
 
-    <main id="main-content" class="hidden">
-        <div class="container">
-            
-            <div id="sec-creator" class="sec hidden">
-                <div class="glass-card">
-                    <h3 style="margin-bottom:25px; color:#0369a1">Assign New Task</h3>
-                    <div class="grid-2">
-                        <div style="grid-column: span 2">
-                            <label>Task Description</label>
-                            <textarea id="t-desc" rows="2" placeholder="What needs to be done?"></textarea>
-                        </div>
-                        <div><label>Zone</label><select id="z-sel" onchange="app.mapDept()"></select></div>
-                        <div><label>Department</label><select id="d-sel" onchange="app.mapSub()"></select></div>
-                        <div><label>Sub-Department</label><select id="s-sel" onchange="app.mapResp()"></select></div>
-                        <div><label>Target Date</label><input type="date"></div>
-                        <div style="grid-column: span 2"><label>Responsible Person</label><input type="text" id="t-resp" readonly placeholder="Auto-mapped..."></div>
-                    </div>
-                    <button class="lbtn" onclick="app.assignTask()">Assign ATR</button>
-                </div>
-            </div>
+  <div class="stats" id="stats"></div>
 
-            <div id="sec-tasks" class="sec hidden">
-                <div class="glass-card">
-                    <h3 style="margin-bottom:20px; color:#0369a1">Pending Actions</h3>
-                    <div class="table-wrap">
-                        <table class="et">
-                            <thead><tr><th>ID</th><th>Task</th><th>Status</th><th>Action</th></tr></thead>
-                            <tbody id="pending-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <div class="filters">
+    <div class="field">
+      <label for="f-search">Search application</label>
+      <input type="text" id="f-search" placeholder="Type an application name…">
+    </div>
+    <div class="field">
+      <label for="f-developer">Developer</label>
+      <select id="f-developer"><option value="">All developers</option></select>
+    </div>
+    <div class="field">
+      <label for="f-server">Server</label>
+      <select id="f-server"><option value="">All servers</option></select>
+    </div>
+    <div class="field">
+      <label for="f-db">Database</label>
+      <select id="f-db"><option value="">All databases</option></select>
+    </div>
+    <div class="field">
+      <label for="f-status">Status</label>
+      <select id="f-status"><option value="">All</option></select>
+    </div>
+    <button class="reset-btn" id="reset-btn">Reset filters</button>
+  </div>
 
-        </div>
-    </main>
+  <div class="toolbar">
+    <div class="result-count"><b id="count-n">0</b> of <b id="count-total">0</b> applications shown &nbsp;·&nbsp; click a row to expand full record</div>
+    <div class="actions">
+      <button class="btn" id="export-csv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        Export CSV
+      </button>
+      <button class="btn" id="print-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+  </div>
 
-    <script>
-        const app = {
-            user: null, tasks: [],
-            mapping: [
-                {z:"Operations & Projects", d:"CCM", s:"Hot Mould-CCM", r:"Mr. Vikash Pareek"},
-                {z:"Quality", d:"Quality Assurance", s:"Lab", r:"Mr. Kamalkant Sharma"}
-            ],
+  <div class="table-shell">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px;">#</th>
+            <th class="sortable" data-sort="Application Name">Application <span class="arrow">↕</span></th>
+            <th class="sortable" data-sort="Status">Status <span class="arrow">↕</span></th>
+            <th class="sortable" data-sort="Live Hosting Server">Live server <span class="arrow">↕</span></th>
+            <th>Live database</th>
+            <th class="sortable" data-sort="Developer Name">Developer <span class="arrow">↕</span></th>
+            <th>Coordinated by</th>
+            <th>Functional user</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <div class="big">∅</div>
+      No applications match the current filters.
+    </div>
+  </div>
 
-            init: function() {
-                const saved = localStorage.getItem('jsaw_atr_tasks');
-                this.tasks = saved ? JSON.parse(saved) : [];
-                this.initZones();
-            },
+</div>
 
-            login: function() {
-                const id = document.getElementById('uid').value;
-                if(!id) return alert("Please enter User ID");
-                this.user = { id, role: id.startsWith('1') ? 'HOD' : 'MID' };
-                
-                document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('sidebar').classList.remove('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
-                
-                if(this.user.role === 'HOD') {
-                    document.getElementById('m-creator').classList.remove('hidden');
-                    this.showSec('sec-creator');
-                } else {
-                    this.showSec('sec-tasks');
-                }
-                this.renderTables();
-            },
+<footer>
+  <span>Internal use — Application &amp; Server Inventory</span>
+  <span id="footer-count">96 applications tracked</span>
+</footer>
 
-            showSec: function(id) {
-                document.querySelectorAll('.sec').forEach(s => s.classList.add('hidden'));
-                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                document.getElementById(id).classList.remove('hidden');
-                const mId = id.replace('sec-', 'm-');
-                if(document.getElementById(mId)) document.getElementById(mId).classList.add('active');
-                window.scrollTo(0,0);
-            },
+<script id="app-data" type="application/json">[{"Sno": 1, "Application Name": "Reimbursement /Claim (JSAW)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "CLAIM_LIVE", "Live URL": "https://apps.jindalsaw.com/claimPrd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "CLAIM_LIVE", "Dev. URL": "https://testapps.jindalsaw.com/claimtest1/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "Raj Kumar/Sunny/Vivek Shukla", "Functional User": "Narender Mantri"}, {"Sno": 2, "Application Name": "LegalCase", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "LegalCasesLive", "Live URL": "https://apps.jindalsaw.com/legalcaseprd/login.aspx", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "LegalCases", "Dev. URL": "https://testapps.jindalsaw.com/legalcasedev/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "R.R. Pathak"}, {"Sno": 3, "Application Name": "ESOP (Treasury and Insurance)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "ESOP", "Live URL": "https://apps.jindalsaw.com/ESOP/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Rishabh", "Coordinated By": null, "Functional User": null}, {"Sno": 4, "Application Name": "Feedback  (JINDALSAW WEBSITE)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "FeedbackGrievance", "Live URL": "https://apps.jindalsaw.com/Feedback/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "OM", "Coordinated By": null, "Functional User": "AVINASH"}, {"Sno": 5, "Application Name": "QRCode Generator", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "QrCode", "Live URL": "https://apps.jindalsaw.com/Qrcode/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Rishabh", "Coordinated By": null, "Functional User": null}, {"Sno": 6, "Application Name": "Userid Unlock SAP (SAP User Management)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "UserUnlokSAP", "Live URL": "https://apps.jindalsaw.com/Userid/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Rishabh", "Coordinated By": "Amit Jha", "Functional User": null}, {"Sno": 7, "Application Name": "JindalWeb (Form-12B)  (TAX)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "JINDALSAW", "Live URL": "https://apps.jindalsaw.com/JINDALWEB/HOME/", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.46", "Dev. DB Name": "JINDALSAW", "Dev. URL": "https://apps.jindalsaw.com/JINDALWEB/HOME/", "Live Date": null, "Developer Name": "Vivek Shukla", "Coordinated By": "NARESH JAMAWAL", "Functional User": "BALRAJ"}, {"Sno": 8, "Application Name": "Man Power (JSAW)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "HR_ManPower", "Live URL": "https://apps.jindalsaw.com/ManPower", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MANPOWER", "Dev. URL": "https://testapps.jindalsaw.com/MANPOWER/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Veni/Gaurav"}, {"Sno": 9, "Application Name": "Vehicle Requisition(Abudhabi)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "VehicleRequisitionUAE", "Live URL": "https://apps.jindalsaw.com/VR/Account/Account/Login", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Rishabh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Faiz"}, {"Sno": 10, "Application Name": "Sap API (Open Period)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "OPEN_Period", "Live URL": "https://apps.jindalsaw.com/Open_Period/OpenPeriod", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.46", "Dev. DB Name": null, "Dev. URL": "https://apps.jindalsaw.com/Open_Period/OpenPeriod", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Rajeev Chaturvedi"}, {"Sno": 11, "Application Name": "QRCode(Abhudhabi)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "BarcodeAbudhabi_live", "Live URL": "https://app.jindalsaw.com/barcodeAbudhabiprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeAbudhabi", "Dev. URL": "https://testapps.jindalsaw.com/barcodeAbudhabi/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Nilesh"}, {"Sno": 12, "Application Name": "Exit form/Clearance Application", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "ClearanceEmployee", "Live URL": "https://apps.jindalsaw.com/CLEARANCE/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "ClearanceEmployee", "Dev. URL": "https://testapps.jindalsaw.com/CLEARANCE/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Gaurav Kumar"}, {"Sno": 13, "Application Name": "Reimbursement/Claim JWIL", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "Claim_JWIL", "Live URL": "https://apps.jindalsaw.com/claimjwil/Login.aspx", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "CLAIM_JWIL_TEST", "Dev. URL": "https://apps.jindalsaw.com/claim_jwil_test/", "Live Date": null, "Developer Name": "Ghanshyam", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Abhishek Jain"}, {"Sno": 14, "Application Name": "Supplier Management System (For Marketing Dept.)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "Supplier_Mgt_sys", "Live URL": "https://apps.jindalsaw.com/SMS/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "Supplier_Mgt_Sys", "Dev. URL": "https://testapps.jindalsaw.com/Supplier-Mgt-System/", "Live Date": null, "Developer Name": "OM", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "ANUJ"}, {"Sno": 15, "Application Name": "QRSS(QRCODE  of SS for Exhibition Purpose)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "QrCode", "Live URL": "https://apps.jindalsaw.com/qrcodess/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "QRCodeLevelPrint_SS_news", "Dev. URL": "https://testapps.jindalsaw.com/qrcodess/", "Live Date": null, "Developer Name": "OM", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "SS Team"}, {"Sno": 16, "Application Name": "PO Approval", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "PODetails", "Live URL": "https://apps.jindalsaw.com/POApprover", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PODetails", "Dev. URL": "https://testapps.jindalsaw.com/POApprover", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R.S. NAYAL", "Functional User": "Gagan Mehta"}, {"Sno": 17, "Application Name": "Admin HelpDesk (For Admin Department)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "AdminHelpdesk", "Live URL": "https://apps.jindalsaw.com/adminhelpdesk/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "AdminHelpdesk", "Dev. URL": "https://testapps.jindalsaw.com/adminhelpdesk/", "Live Date": null, "Developer Name": "Ashutosh/Ashawariya", "Coordinated By": "Sunny", "Functional User": "Jagal Ram"}, {"Sno": 18, "Application Name": "PTS Hunting", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "PTSHUNTING", "Live URL": "https://apps.jindalsaw.com/PTSHUNTING/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSHUNTING", "Dev. URL": "https://testapps.jindalsaw.com/PTSHUNTING/", "Live Date": null, "Developer Name": "OM", "Coordinated By": "DP DAS", "Functional User": "Nashik Local IT"}, {"Sno": 19, "Application Name": "QR LABEL PRINT (Sticker Printing-Tinyurl)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "QRCodeLevel", "Live URL": "https://apps.jindalsaw.com/QRCodeLevelPrint/login    https://apps.jindalsaw.com/J/login", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "QRCodeLevelPrint_SS", "Dev. URL": "https://testapps.jindalsaw.com/QRCodeLevelPrint", "Live Date": null, "Developer Name": "OM", "Coordinated By": "DP DAS", "Functional User": "RRM"}, {"Sno": 20, "Application Name": "Dashboard ,Credit Note & Credit Limit Approval ,Billing Exp. Approval", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "JSAWWebApps", "Live URL": "https://apps.jindalsaw.com/dashboard/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JSAWWebApps", "Dev. URL": "https://testapps.jindalsaw.com/dashboard/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "IT Team"}, {"Sno": 21, "Application Name": "SO Tolerence Approval", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": null, "Live URL": "https://apps.jindalsaw.com/sotol/sta.aspx", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": null, "Dev. URL": "https://testapps.jindalsaw.com/sotol/sta.aspx", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Daman Jeet"}, {"Sno": 22, "Application Name": "Production Order Approval (SS)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": null, "Live URL": "https://apps.jindalsaw.com/sotol/prodaprss/poass.aspx", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "`", "Dev. URL": "https://testapps.jindalsaw.com/sotol/prodaprss/poass.aspx", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Daman Jeet"}, {"Sno": 23, "Application Name": "Vehicle Request (KOSI)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "JsawVehicleRequisition", "Live URL": "https://apps.jindalsaw.com/JsawVehicleRequestApps", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JsawVehicleRequisitionTest", "Dev. URL": "https://testapps.jindalsaw.com/JsawVehicleRequestApps", "Live Date": null, "Developer Name": "Om", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "S. Tyagi"}, {"Sno": 24, "Application Name": "QRCode  HR(Exibhition)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": null, "Live URL": "https://apps.jindalsaw.com/QRCodeHR/login.aspx", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "QRCodeHR", "Dev. URL": "https://testapps.jindalsaw.com/QRCodeHR/login.aspx", "Live Date": null, "Developer Name": "Om", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "AVINASH"}, {"Sno": 25, "Application Name": "PTS ERW", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSERWBT04_LIVE", "Live URL": "https://app.jindalsaw.com/ptserwbt04usaprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSERW", "Dev. URL": "https://testapps.jindalsaw.com/erwptstest/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Anurag Shrivastav"}, {"Sno": 26, "Application Name": "PTS Threading", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSTHREADINGBT04_LIVE", "Live URL": "https://app.jindalsaw.com/PTSTHREADINGBT04USAPRD/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSTHREADING", "Dev. URL": "https://testapps.jindalsaw.com/threadingptstest/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Anurag Shrivastav"}, {"Sno": 27, "Application Name": "PTS Coating", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSCOATINGBT01_LIVE", "Live URL": "https://app.jindalsaw.com/ptscoatingbt01usaprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSCOATING", "Dev. URL": "https://testapps.jindalsaw.com/coatingptstest/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Umang Gupta"}, {"Sno": 28, "Application Name": "Yard Management(Batch Determination / Rack Transfer / Sale Order Assignment / Pipe Receiving / Location Transfer /  Heat Segregation)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "BarcodeBT04USA_LIVE", "Live URL": "https://app.jindalsaw.com/BarcodeBT04usaprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeBT04USA", "Dev. URL": "https://testapps.jindalsaw.com/BarcodeBT04test/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Anurag Shrivastav"}, {"Sno": 29, "Application Name": "STO PO OBD (Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "BarcodeSTOPOOBD_LIVE", "Live URL": "https://app.jindalsaw.com/rm-stopoobd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeSTOOBDERW", "Dev. URL": "https://testapps.jindalsaw.com/Barcodestoobderwtest/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 30, "Application Name": "541 Material Transfer(Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "BarcodeMaterialTransfer_LIVE", "Live URL": "https://app.jindalsaw.com/541-MaterialTransfer/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeMaterialTransfer", "Dev. URL": "https://testapps.jindalsaw.com/BarcodeMaterialTransfer/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 31, "Application Name": "Reservation(Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "RESERVATIONBT04_LIVE", "Live URL": "https://app.jindalsaw.com/Autoconsumption_Reservation/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "Reservation", "Dev. URL": "https://testapps.jindalsaw.com/Reservationtest/", "Live Date": null, "Developer Name": "Om", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 32, "Application Name": "PO Plant(Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "POReport", "Live URL": "https://app.jindalsaw.com/POPlant/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "POReport", "Dev. URL": "https://testapps.jindalsaw.com/POReportTest/login.aspx", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 33, "Application Name": "Heat Treatment(PTS-Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSHEATTREATMENT_LIVE", "Live URL": "https://app.jindalsaw.com/heattreatmentusaprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "HeatTreatment", "Dev. URL": "https://testapps.jindalsaw.com/HeatTreatment/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Anurag Shrivastav"}, {"Sno": 34, "Application Name": "DRILL PIPE(PTS-Baytown)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "DRILLPIPE", "Live URL": "https://app.jindalsaw.com/DRILLPIPE/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "DRILLPIPE", "Dev. URL": "https://testapps.jindalsaw.com/DRILL_PIPE/", "Live Date": null, "Developer Name": "Ghanshyam", "Coordinated By": "DP DAS", "Functional User": "Damodar"}, {"Sno": 35, "Application Name": "Nashik Location Transfer/BD", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "NASHIKBD", "Live URL": "https://app.jindalsaw.com/nashikbdprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "NASHIKBD", "Dev. URL": "https://testapps.jindalsaw.com/nashikbd/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Nashik IT"}, {"Sno": 36, "Application Name": "MTC-QRCODE-API", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "MTC_QRCODE", "Live URL": "https://app.jindalsaw.com:4000", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MTC_QRCODE", "Dev. URL": "https://172.16.1.46:4000", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "RRM"}, {"Sno": 37, "Application Name": "MTC_QRCODE", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "MTC_QRCODE", "Live URL": "https://app.jindalsaw.com/mtcqrcode/", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MTC_QRCODE", "Dev. URL": "https://apps.jindalsaw.com/mtcqrcodedev/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "RRM"}, {"Sno": 38, "Application Name": "Support Ticket   (API  & Report)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "MessageContext", "Live URL": "https://app.jindalsaw.com/MssageMailApi/", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.46", "Dev. DB Name": "MessageContext", "Dev. URL": "https://apps.jindalsaw.com/MssageMailApi/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "P. K. SHARMA", "Functional User": "IT Team"}, {"Sno": 39, "Application Name": "Support Ticket  Add In (POP UP )", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "MessageContext", "Live URL": "https://app.jindalsaw.com/SupportTicket/", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.46", "Dev. DB Name": "MessageContext", "Dev. URL": "https://apps.jindalsaw.com/SupportTicket/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "P. K. SHARMA", "Functional User": "IT Team"}, {"Sno": 40, "Application Name": "MM Consumption Tools", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "MM_ConsumptionTools", "Live URL": "https://app.jindalsaw.com/mm_tools/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MM_ConsumptionTools", "Dev. URL": "https://testapps.jindalsaw.com/mm_tools/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Sohini Pandey"}, {"Sno": 41, "Application Name": "User Unlock (USA)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "UNLOCKUSER_USA", "Live URL": "https://app.jindalsaw.com/userunlock/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "UNLOCKUSER_USA", "Dev. URL": "https://testapps.jindalsaw.com/usauserunlock/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "IT Team"}, {"Sno": 42, "Application Name": "A-I Payment- DMS", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "A-1Payment", "Live URL": "https://salesdocs.jindalsaw.com/a1payment/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 43, "Application Name": "A-II Payment- DMS", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "A-IIPayment", "Live URL": "https://salesdocs.jindalsaw.com/a2payment/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 44, "Application Name": "BankGuarantee", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "BankGuarantee", "Live URL": "https://salesdocs.jindalsaw.com/bg/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 45, "Application Name": "DI Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "DISalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/DISalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 46, "Application Name": "DMS Menu", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": null, "Live URL": "https://salesdocs.jindalsaw.com/dms/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 47, "Application Name": "Fitting- Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "FittingBilling", "Live URL": "https://salesdocs.jindalsaw.com/FittingBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 48, "Application Name": "Insurance Claims", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "DMS_InsuranceClaims", "Live URL": "https://salesdocs.jindalsaw.com/InsuranceClaims/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 49, "Application Name": "Insurance Policies", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "DMS_InsurancePolicies", "Live URL": "https://salesdocs.jindalsaw.com/InsurancePolicies/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 50, "Application Name": "JFL Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "JFLSalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/JFLSalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 51, "Application Name": "JQTL Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "JQTLSalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/JQTLSalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 52, "Application Name": "Jsaw Sales Documents", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "JsawSales", "Live URL": "https://salesdocs.jindalsaw.com/salesdocuments/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 53, "Application Name": "JTIL Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "JTILSalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/JTILSalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 54, "Application Name": "LD Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "LDSalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/LDSalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 55, "Application Name": "Pellet Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "PelletBilling", "Live URL": "https://salesdocs.jindalsaw.com/pellet/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 56, "Application Name": "Purchase LC Request-DMS", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "PurchaseLCrequest", "Live URL": "https://salesdocs.jindalsaw.com/PurchaseLCRequest/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 57, "Application Name": "Seamless Sales Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "SeamlessSalesBilling", "Live URL": "https://salesdocs.jindalsaw.com/SeamlessSalesBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 58, "Application Name": "SS Pipe Billing", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "SSpipeBilling", "Live URL": "https://salesdocs.jindalsaw.com/SSpipeBilling/", "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": null, "Live Date": null, "Developer Name": "Pushpendra", "Coordinated By": null, "Functional User": "Treasury Team"}, {"Sno": 59, "Application Name": "SAPHELPDESK (CR Portal)", "Status": "Live", "Live Hosting Server": "172.16.1.172", "Live DB(Server)": "172.16.1.172", "Live DB Name": "ITRequest", "Live URL": "https://saphelpdesk.jindalsaw.com/saphelpdesk/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "ITRequest", "Dev. URL": "https://testapps.jindalsaw.com/saphelpdesk/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "P. K. SHARMA", "Functional User": "IT Team"}, {"Sno": 60, "Application Name": "NANAKAPAYA LSAW PTS", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "LSAWPTS", "Live URL": "https://app.jindalsaw.com/lsawpts/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "LSAWPTS", "Dev. URL": "https://testapps.jindalsaw.com/nanakapayalsawpts/", "Live Date": "2025-07-23 00:00:00", "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Arun"}, {"Sno": 61, "Application Name": "Man Power Candidate Portal(JSAW)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MANPOWER", "Dev. URL": "https://testapps.jindalsaw.com/manpowerdoc", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Navdeep Goyat"}, {"Sno": 62, "Application Name": "QRCode(Samagogha)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeScan", "Dev. URL": "https://testapps.jindalsaw.com/barcode/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Praveen Singh"}, {"Sno": 63, "Application Name": "KRA NASHIK", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "KRA_NASHIK", "Dev. URL": "https://testapps.jindalsaw.com/KRANASHIK/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Amit Chandak"}, {"Sno": 64, "Application Name": "KRA", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JsawKra", "Dev. URL": "https://testapps.jindalsaw.com/KRA/Login", "Live Date": null, "Developer Name": "OM", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Veni/Gaurav"}, {"Sno": 65, "Application Name": "Jsaw Visitor Entry(KOSI)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "JsawVisitorEntry", "Live URL": "https://apps.jindalsaw.com/JsawVisitor", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JsawVisitorEntry", "Dev. URL": "https://testapps.jindalsaw.com/jsawvisitor", "Live Date": "2025-05-19 00:00:00", "Developer Name": "Ashawariya", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "S. Tyagi"}, {"Sno": 66, "Application Name": "Guest House Entry(KOSI)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "JsawGuestHouse", "Live URL": "https://apps.jindalsaw.com/JSAWGuestHouse", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JsawGuestHouse", "Dev. URL": "https://testapps.jindalsaw.com/jsawguesthouse", "Live Date": null, "Developer Name": "Ashutosh/Priyanka", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "S. Tyagi"}, {"Sno": 67, "Application Name": "House Maintanence(KOSI)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "HouseMaintenanceKosi", "Live URL": "https://apps.jindalsaw.com/KosiHouseMaintenance", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "HouseMaintenanceKosi", "Dev. URL": "https://testapps.jindalsaw.com/KosiHouseMaintenance", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "S. Tyagi"}, {"Sno": 68, "Application Name": "Enquiry Portal", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": null, "Dev. URL": "https://testapps.jindalsaw.com/JsawEnquiry/Account/Account/Login", "Live Date": null, "Developer Name": "Ashutosh/Ghanshyam", "Coordinated By": "DP DAS", "Functional User": "SS Team"}, {"Sno": 69, "Application Name": "RGP/NRGP Approval", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": null, "Dev. URL": "https://testapps.jindalsaw.com/rgp-nrgp/approval.aspx", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Praveen Singh"}, {"Sno": 70, "Application Name": "M TO M  Transfer (413/411)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeMaterialTransfer", "Dev. URL": "https://testapps.jindalsaw.com/materialtransfer/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "R. S. NAYAL", "Functional User": "SS Team"}, {"Sno": 71, "Application Name": "QR Code Abudhabi (Document Viewer)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "QRCodeAbudhabiHR", "Dev. URL": "https://testapps.jindalsaw.com/QrCodeAEAUHDoc/login.aspx", "Live Date": null, "Developer Name": "Ghanshyam", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Navneet Baitra"}, {"Sno": 72, "Application Name": "(Truck Entry API)p2prescreateapi", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "TruckEntry", "Dev. URL": "https://testapps.jindalsaw.com/node/p2prescreateapi", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "R. S. NAYAL", "Functional User": null}, {"Sno": 73, "Application Name": "TruckEntry", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "TruckEntry", "Dev. URL": "https://testapps.jindalsaw.com/node/truckentryapi/show", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "R. S. NAYAL", "Functional User": null}, {"Sno": 74, "Application Name": "SAP ID CREATION and Activity Portal", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": null, "Dev. URL": "https://testapps.jindalsaw.com/JsawSapRights/", "Live Date": null, "Developer Name": "OM", "Coordinated By": "P. K. SHARMA", "Functional User": "IT Team"}, {"Sno": 75, "Application Name": "JWIL Dashboard", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JWILWebApps", "Dev. URL": "testapps.jindalsaw.com/jwildashboard/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Prashan Jeet JWIL"}, {"Sno": 76, "Application Name": "Abudhabi PTS", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSABUDHABI", "Live URL": "https://app.jindalsaw.com/abudhabiptsprd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSABUDHABI", "Dev. URL": "https://testapps.jindalsaw.com/abudhabipts/", "Live Date": "2025-02-02 00:00:00", "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Nilesh"}, {"Sno": 77, "Application Name": "MM 541  MT", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "541_MT", "Live URL": "https://app.jindalsaw.com/MM_541MT/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "541_MT", "Dev. URL": "https://testapps.jindalsaw.com/MM_541MT/", "Live Date": "2025-09-12 00:00:00", "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Shiping-Baytown"}, {"Sno": 78, "Application Name": "Double Joint Coating PTS  (USA)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSCOATINGDJPIPES", "Live URL": "https://app.jindalsaw.com/DJCOATINGPTS/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSCOATINGDJPIPES", "Dev. URL": "https://testapps.jindalsaw.com/djcoatingpts/", "Live Date": "2025-12-12 00:00:00", "Developer Name": "Ghanshyam/OM", "Coordinated By": "DP DAS", "Functional User": "Umang Gupta"}, {"Sno": 79, "Application Name": "Coating PTS Other (USA)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "PTSCOATING_OTHER", "Live URL": "https://app.jindalsaw.com/COATINGPTS_OTHER/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "PTSCOATING_OTHER", "Dev. URL": "https://testapps.jindalsaw.com/coatingpts_other", "Live Date": null, "Developer Name": "Ghanshyam", "Coordinated By": "DP DAS", "Functional User": "Umang Gupta"}, {"Sno": 80, "Application Name": "Abudhabi PTS Generate Pipe No  (For Abudhabi PTS Application)", "Status": "Live", "Live Hosting Server": "192.168.10.183", "Live DB(Server)": "192.168.10.183", "Live DB Name": "AbudhabiLevelPrint_LIVE", "Live URL": "https://app.jindalsaw.com/p/login", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "AbudhabiLevelPrint", "Dev. URL": "https://testapps.jindalsaw.com/p/login", "Live Date": "2025-12-09 00:00:00", "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Nilesh"}, {"Sno": 81, "Application Name": "LMS (Priyanka)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "LMS", "Live URL": "https://apps.jindalsaw.com/LMS/Account/Account/Login", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "LMS", "Dev. URL": "https://testapps.jindalsaw.com/LMS/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Navdeep Goyat"}, {"Sno": 82, "Application Name": "QlikApp (Priyanka)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": null, "Dev. URL": "https://testapps.jindalsaw.com/QlikApp /", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "IT Team"}, {"Sno": 83, "Application Name": "Safety App USA (Mohit)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": null, "Dev. DB (Server)": null, "Dev. DB Name": null, "Dev. URL": "https://safetycheckusa.netlify.app/", "Live Date": null, "Developer Name": "Mohit", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Harshit"}, {"Sno": 84, "Application Name": "Abudhabi BD/Location Transfer   (New)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "AbudhabiBD", "Dev. URL": "https://testapps.jindalsaw.com/abudhabibd/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "DP DAS", "Functional User": "Nilesh"}, {"Sno": 85, "Application Name": "Customer Portal (Priyanka)  USA (DP Das)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.233", "Dev. DB (Server)": "172.16.1.233", "Dev. DB Name": "CustomerPortal", "Dev. URL": "https://testapps.jindalsaw.com/customerportalweb/", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "DP DAS", "Functional User": "Harshit"}, {"Sno": 86, "Application Name": "Customer Portal API (Priyanka)  USA (DP Das)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.233", "Dev. DB (Server)": "172.16.1.233", "Dev. DB Name": "CustomerPortal", "Dev. URL": "https://addin.jindalsaw.com/customerportalapi", "Live Date": null, "Developer Name": "Priyanka", "Coordinated By": "DP DAS", "Functional User": "Harshit"}, {"Sno": 87, "Application Name": "ATR (Abudhabi) MOHIT", "Status": "Live", "Live Hosting Server": "172.16.1.233", "Live DB(Server)": "172.16.1.233", "Live DB Name": "ATR-1", "Live URL": "https://addin.jindalsaw.com/atrabudhabi/login", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "ATR", "Dev. URL": "https://testapps.jindalsaw.com/atrabudhabi/login", "Live Date": "2026-05-27 00:00:00", "Developer Name": "Mohit", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Ayush"}, {"Sno": 88, "Application Name": "RFQ (JWIL) MOHIT", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JWILRFQ", "Dev. URL": "https://testapps.jindalsaw.com/jwilrfq", "Live Date": null, "Developer Name": "Mohit", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Prashan Jeet JWIL"}, {"Sno": 89, "Application Name": "ManPower (JWIL)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "MANPOWER_JWIL", "Live URL": "ttps://apps.jindalsaw.com/ManpowerJWIL", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MANPOWER_JWIL", "Dev. URL": "https://testapps.jindalsaw.com/ManpowerJWIL", "Live Date": "2026-06-09 00:00:00", "Developer Name": "Ghanshyam/Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "JWIL HR Team"}, {"Sno": 90, "Application Name": "ManPower (JWIL) Candidate Portal", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "MANPOWER_JWIL", "Live URL": "https://apps.jindalsaw.com/ManpowerDocJWIL", "Dev.  Hosting": "172.16.1.46", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "MANPOWER_JWIL", "Dev. URL": "https://testapps.jindalsaw.com/ManpowerDocJWIL", "Live Date": "2026-06-09 00:00:00", "Developer Name": "Ghanshyam/Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "JWIL HR Team"}, {"Sno": 91, "Application Name": "TBPMS (JSAW)", "Status": "Live", "Live Hosting Server": "172.16.1.233", "Live DB(Server)": "172.16.1.233", "Live DB Name": "NewTBPMS", "Live URL": "https://tbpms.jindalsaw.com/Account/Account/Login", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "NewTBPMS", "Dev. URL": "https://testapps.jindalsaw.com/TBPMS/Account/Account/Login", "Live Date": "2026-03-09 00:00:00", "Developer Name": "OM/Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Veni/Gaurav"}, {"Sno": 92, "Application Name": "STO PO OBD NEW  Version", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeSTOOBD_New", "Dev. URL": "https://testapps.jindalsaw.com/Barcodestoobdnew/login.aspx", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 93, "Application Name": "STO PO OBD PRINT", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "BarcodeSTOOBD_Print", "Dev. URL": "https://testapps.jindalsaw.com/Barcodestoobdprint/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "R. S. NAYAL", "Functional User": "Omkar"}, {"Sno": 94, "Application Name": "Reimbursement /Claim (JITF)", "Status": "Live", "Live Hosting Server": "172.16.1.46", "Live DB(Server)": "172.16.1.46", "Live DB Name": "CLAIM_LIVE", "Live URL": "https://apps.jindalsaw.com/claimPrd/", "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "CLAIM_LIVE", "Dev. URL": "https://testapps.jindalsaw.com/claimtest1/", "Live Date": null, "Developer Name": "Ashutosh", "Coordinated By": "Raj Kumar/Sunny/Vivek Shukla", "Functional User": "Narender Mantri"}, {"Sno": 95, "Application Name": "Exit form/Clearance Application(JITF)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "ClearanceEmployee", "Dev. URL": "https://testapps.jindalsaw.com/CLEARANCE/", "Live Date": null, "Developer Name": "OM/Ashutosh", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "Megha Shastri"}, {"Sno": 96, "Application Name": "Exit form/Clearance Application(JWIL)", "Status": "Development", "Live Hosting Server": null, "Live DB(Server)": null, "Live DB Name": null, "Live URL": null, "Dev.  Hosting": "172.16.1.36", "Dev. DB (Server)": "172.16.1.36", "Dev. DB Name": "JWIL_Clearance", "Dev. URL": "https://testapps.jindalsaw.com/JWILClearance", "Live Date": null, "Developer Name": "Ghanshayam", "Coordinated By": "SUNNY MALHOTRA", "Functional User": "JWIL HR Team"}]
+</script>
+<script>
+(function(){
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUzmxVFCPgQ3ge5FBkZ8Q4npwf9hCgo8iiivns7Ej2GJa_JoDCsOo1C2tTwLtWPk1nu1aAFKgT7HV0/pub?output=csv';
+  const SHEET_VIEW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUzmxVFCPgQ3ge5FBkZ8Q4npwf9hCgo8iiivns7Ej2GJa_JoDCsOo1C2tTwLtWPk1nu1aAFKgT7HV0/pubhtml';
+  const RAW_FALLBACK = JSON.parse(document.getElementById('app-data').textContent);
 
-            initZones: function() {
-                const zones = [...new Set(this.mapping.map(m => m.z))];
-                document.getElementById('z-sel').innerHTML = '<option value="">Select Zone</option>' + zones.map(z => `<option>${z}</option>`).join('');
-            },
+  const $ = (sel) => document.querySelector(sel);
 
-            mapDept: function() {
-                const z = document.getElementById('z-sel').value;
-                const depts = [...new Set(this.mapping.filter(m => m.z === z).map(m => m.d))];
-                document.getElementById('d-sel').innerHTML = '<option value="">Select Dept</option>' + depts.map(d => `<option>${d}</option>`).join('');
-            },
+  // ---------- normalization helpers ----------
+  function normKey(s){
+    return (s || '').toString().toLowerCase().replace(/[^a-z]/g, '');
+  }
 
-            mapSub: function() {
-                const d = document.getElementById('d-sel').value;
-                const subs = this.mapping.filter(m => m.d === d).map(m => m.s);
-                document.getElementById('s-sel').innerHTML = '<option value="">Select Sub</option>' + subs.map(s => `<option>${s}</option>`).join('');
-            },
+  // maps a normalized header fragment set -> canonical field
+  const HEADER_RULES = [
+    { field: 'sno',            test: k => k === 'sno' || k === 'sn' },
+    { field: 'name',           test: k => k.includes('application') && k.includes('name') },
+    { field: 'status',         test: k => k === 'status' },
+    { field: 'liveServer',     test: k => k.includes('live') && k.includes('host') },
+    { field: 'liveDbServer',   test: k => k.includes('live') && k.includes('db') && k.includes('server') },
+    { field: 'liveDbName',     test: k => k.includes('live') && k.includes('db') && k.includes('name') },
+    { field: 'liveUrl',        test: k => k.includes('live') && k.includes('url') },
+    { field: 'devServer',      test: k => k.includes('dev') && k.includes('host') },
+    { field: 'devDbServer',    test: k => k.includes('dev') && k.includes('db') && k.includes('server') },
+    { field: 'devDbName',      test: k => k.includes('dev') && k.includes('db') && k.includes('name') },
+    { field: 'devUrl',         test: k => k.includes('dev') && k.includes('url') },
+    { field: 'liveDate',       test: k => k.includes('live') && k.includes('date') },
+    { field: 'developer',      test: k => k.includes('developer') },
+    { field: 'coordinator',    test: k => k.includes('coordinat') },
+    { field: 'functionalUser', test: k => k.includes('functional') }
+  ];
 
-            mapResp: function() {
-                const s = document.getElementById('s-sel').value;
-                const match = this.mapping.find(m => m.s === s);
-                document.getElementById('t-resp').value = match ? match.r : "";
-            },
+  function mapRowToRecord(headerList, rowValues){
+    const rec = {};
+    headerList.forEach((h, i) => {
+      const nk = normKey(h);
+      const rule = HEADER_RULES.find(r => r.test(nk));
+      if(rule && rec[rule.field] === undefined){
+        rec[rule.field] = (rowValues[i] || '').toString().trim();
+      }
+    });
+    return {
+      sno: rec.sno || '',
+      name: rec.name || '(Unnamed application)',
+      status: rec.status || 'Unknown',
+      liveServer: rec.liveServer || '',
+      liveDbServer: rec.liveDbServer || '',
+      liveDbName: rec.liveDbName || '',
+      liveUrl: rec.liveUrl || '',
+      devServer: rec.devServer || '',
+      devDbServer: rec.devDbServer || '',
+      devDbName: rec.devDbName || '',
+      devUrl: rec.devUrl || '',
+      liveDate: rec.liveDate || '',
+      developer: (rec.developer || '').toUpperCase(),
+      coordinator: rec.coordinator || '',
+      functionalUser: rec.functionalUser || ''
+    };
+  }
 
-            assignTask: function() {
-                const desc = document.getElementById('t-desc').value;
-                if(!desc) return alert("Enter task description");
-                this.tasks.push({id: "ATR-"+Math.floor(Math.random()*900+100), desc, status: "Open"});
-                localStorage.setItem('jsaw_atr_tasks', JSON.stringify(this.tasks));
-                this.renderTables();
-                this.showSec('sec-tasks');
-                document.getElementById('t-desc').value = "";
-            },
+  function fallbackToRecords(raw){
+    return raw.map(d => mapRowToRecord(Object.keys(d), Object.values(d)));
+  }
 
-            renderTables: function() {
-                const body = document.getElementById('pending-body');
-                body.innerHTML = this.tasks.map(t => `
-                    <tr><td>${t.id}</td><td>${t.desc}</td><td><span style="color:#f59e0b;font-weight:700">${t.status}</span></td><td><button style="padding:5px 10px; cursor:pointer">View</button></td></tr>
-                `).join('');
-            }
-        };
-        app.init();
-    </script>
+  // ---------- minimal RFC4180 CSV parser ----------
+  function parseCSV(text){
+    const rows = [];
+    let row = [], field = '', inQuotes = false;
+    for(let i = 0; i < text.length; i++){
+      const c = text[i], next = text[i+1];
+      if(inQuotes){
+        if(c === '"' && next === '"'){ field += '"'; i++; }
+        else if(c === '"'){ inQuotes = false; }
+        else { field += c; }
+      } else {
+        if(c === '"'){ inQuotes = true; }
+        else if(c === ','){ row.push(field); field = ''; }
+        else if(c === '\r'){ /* skip */ }
+        else if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
+        else { field += c; }
+      }
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows.filter(r => r.some(v => v !== ''));
+  }
+
+  let DATA = fallbackToRecords(RAW_FALLBACK);
+  const tbody = $('#table-body');
+  const emptyState = $('#empty-state');
+
+  let sortKey = null;
+  let sortDir = 1;
+  let expandedSno = null;
+
+  // ---------- Stats ----------
+  function renderStats(){
+    const total = DATA.length;
+    const live = DATA.filter(d => /live/i.test(d.status)).length;
+    const dev = DATA.filter(d => /dev/i.test(d.status)).length;
+    const servers = new Set();
+    const developers = new Set();
+    DATA.forEach(d => {
+      if(d.liveServer) servers.add(d.liveServer);
+      if(d.devServer) servers.add(d.devServer);
+      if(d.developer) d.developer.split(/[\/,]/).forEach(n => developers.add(n.trim()));
+    });
+    const stats = [
+      { n: total, l: 'Total applications', cls: '' },
+      { n: live, l: 'Live in production', cls: 'live' },
+      { n: dev, l: 'In development', cls: 'dev' },
+      { n: servers.size, l: 'Unique servers', cls: '' },
+      { n: developers.size, l: 'Developers', cls: '' }
+    ];
+    $('#stats').innerHTML = stats.map(s =>
+      '<div class="stat ' + s.cls + '"><div class="n">' + s.n + '</div><div class="l">' + s.l + '</div></div>'
+    ).join('');
+  }
+
+  // ---------- Filter dropdown population ----------
+  function uniqueSorted(arr){
+    return Array.from(new Set(arr.filter(Boolean).map(s => s.trim()))).sort((a,b)=>a.localeCompare(b));
+  }
+
+  function populateFilters(){
+    const developers = uniqueSorted(DATA.flatMap(d => d.developer.split(/[\/,]/)));
+    const servers = uniqueSorted(DATA.flatMap(d => [d.liveServer, d.devServer]));
+    const dbs = uniqueSorted(DATA.flatMap(d => [d.liveDbName, d.devDbName]));
+    const statuses = uniqueSorted(DATA.map(d => d.status));
+
+    const fill = (sel, values) => {
+      const el = $(sel);
+      values.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = v;
+        el.appendChild(opt);
+      });
+    };
+    fill('#f-developer', developers);
+    fill('#f-server', servers);
+    fill('#f-db', dbs);
+    fill('#f-status', statuses);
+  }
+
+  // ---------- Filtering ----------
+  function getFiltered(){
+    const q = $('#f-search').value.trim().toLowerCase();
+    const dev = $('#f-developer').value;
+    const srv = $('#f-server').value;
+    const db = $('#f-db').value;
+    const status = $('#f-status').value;
+
+    let rows = DATA.filter(d => {
+      if(q && !d.name.toLowerCase().includes(q)) return false;
+      if(dev && !d.developer.split(/[\/,]/).map(s=>s.trim()).includes(dev)) return false;
+      if(srv && d.liveServer !== srv && d.devServer !== srv) return false;
+      if(db && d.liveDbName !== db && d.devDbName !== db) return false;
+      if(status && d.status !== status) return false;
+      return true;
+    });
+
+    if(sortKey){
+      const map = {
+        'Application Name': 'name',
+        'Status': 'status',
+        'Live Hosting Server': 'liveServer',
+        'Developer Name': 'developer'
+      };
+      const key = map[sortKey];
+      rows.sort((a,b) => {
+        const av = (a[key]||'').toString().toLowerCase();
+        const bv = (b[key]||'').toString().toLowerCase();
+        if(av < bv) return -1 * sortDir;
+        if(av > bv) return 1 * sortDir;
+        return 0;
+      });
+    }
+    return rows;
+  }
+
+  function esc(s){
+    return (s || '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function badge(status){
+    const isLive = /live/i.test(status);
+    const cls = isLive ? 'live' : 'dev';
+    return '<span class="badge ' + cls + '"><span class="dot"></span>' + esc(status) + '</span>';
+  }
+
+  function fieldBlock(k, v, mono){
+    const cls = 'v' + (mono ? ' mono' : '') + (v ? '' : ' empty');
+    return '<div class="exp-field"><div class="k">' + esc(k) + '</div><div class="' + cls + '">' + (v ? esc(v) : '—') + '</div></div>';
+  }
+
+  function renderTable(){
+    const rows = getFiltered();
+    $('#count-n').textContent = rows.length;
+    $('#count-total').textContent = DATA.length;
+
+    if(rows.length === 0){
+      tbody.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    let html = '';
+    rows.forEach(d => {
+      const isExpanded = expandedSno === d.sno;
+      html += '<tr class="data-row' + (isExpanded ? ' expanded' : '') + '" data-sno="' + d.sno + '">' +
+        '<td class="sno">' + esc(d.sno) + '</td>' +
+        '<td class="appname">' + esc(d.name) + '</td>' +
+        '<td>' + badge(d.status) + '</td>' +
+        '<td class="mono">' + esc(d.liveServer || '—') + '</td>' +
+        '<td class="mono">' + esc(d.liveDbName || '—') + '</td>' +
+        '<td>' + esc(d.developer || '—') + '</td>' +
+        '<td>' + esc(d.coordinator || '—') + '</td>' +
+        '<td>' + esc(d.functionalUser || '—') + '</td>' +
+        '</tr>';
+      if(isExpanded){
+        html += '<tr class="expand-row"><td colspan="8"><div class="expand-inner">' +
+          fieldBlock('Live DB Server', d.liveDbServer, true) +
+          fieldBlock('Live URL', d.liveUrl, true) +
+          fieldBlock('Dev hosting server', d.devServer, true) +
+          fieldBlock('Dev DB server', d.devDbServer, true) +
+          fieldBlock('Dev DB name', d.devDbName, true) +
+          fieldBlock('Dev URL', d.devUrl, true) +
+          fieldBlock('Live date', d.liveDate, false) +
+          '</div></td></tr>';
+      }
+    });
+    tbody.innerHTML = html;
+
+    // Make live URLs clickable within cells post-render (kept simple: click row to expand)
+    document.querySelectorAll('.data-row').forEach(tr => {
+      tr.addEventListener('click', () => {
+        const sno = parseInt(tr.getAttribute('data-sno'), 10);
+        expandedSno = (expandedSno === sno) ? null : sno;
+        renderTable();
+      });
+    });
+  }
+
+  // ---------- Sorting ----------
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.getAttribute('data-sort');
+      if(sortKey === key){ sortDir *= -1; } else { sortKey = key; sortDir = 1; }
+      renderTable();
+    });
+  });
+
+  // ---------- Filter events ----------
+  ['#f-search','#f-developer','#f-server','#f-db','#f-status'].forEach(sel => {
+    $(sel).addEventListener('input', renderTable);
+    $(sel).addEventListener('change', renderTable);
+  });
+
+  $('#reset-btn').addEventListener('click', () => {
+    $('#f-search').value = '';
+    $('#f-developer').value = '';
+    $('#f-server').value = '';
+    $('#f-db').value = '';
+    $('#f-status').value = '';
+    sortKey = null; sortDir = 1;
+    renderTable();
+  });
+
+  $('#print-btn').addEventListener('click', () => window.print());
+
+  $('#export-csv').addEventListener('click', () => {
+    const rows = getFiltered();
+    const headers = ['Sno','Application Name','Status','Live Hosting Server','Live DB Server','Live DB Name','Live URL','Dev Hosting','Dev DB Server','Dev DB Name','Dev URL','Live Date','Developer Name','Coordinated By','Functional User'];
+    const lines = [headers.join(',')];
+    rows.forEach(d => {
+      const vals = [d.sno,d.name,d.status,d.liveServer,d.liveDbServer,d.liveDbName,d.liveUrl,d.devServer,d.devDbServer,d.devDbName,d.devUrl,d.liveDate,d.developer,d.coordinator,d.functionalUser];
+      lines.push(vals.map(v => {
+        const s = (v === null || v === undefined) ? '' : String(v);
+        return '"' + s.replace(/"/g,'""') + '"';
+      }).join(','));
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'application_portfolio_export.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  function refreshAllUI(){
+    // clear and repopulate filter dropdowns since developer/server/db lists may change
+    ['#f-developer','#f-server','#f-db','#f-status'].forEach(sel => {
+      const el = $(sel);
+      const keep = el.value;
+      el.innerHTML = el.id === 'f-developer' ? '<option value="">All developers</option>'
+        : el.id === 'f-server' ? '<option value="">All servers</option>'
+        : el.id === 'f-db' ? '<option value="">All databases</option>'
+        : '<option value="">All</option>';
+      el.dataset.keep = keep;
+    });
+    populateFilters();
+    ['#f-developer','#f-server','#f-db','#f-status'].forEach(sel => {
+      const el = $(sel);
+      if(el.dataset.keep) el.value = el.dataset.keep;
+    });
+    renderStats();
+    renderTable();
+    $('#footer-count').textContent = DATA.length + ' applications tracked';
+  }
+
+  function setSyncStatus(mode){
+    const el = $('#sync-status');
+    if(mode === 'live'){
+      el.innerHTML = '<span class="live-dot"></span>Live data from Google Sheet';
+    } else if(mode === 'loading'){
+      el.innerHTML = '<span class="live-dot"></span>Connecting to Google Sheet…';
+    } else {
+      el.innerHTML = '<span class="live-dot" style="background:#f0b429;box-shadow:0 0 8px #f0b429;"></span>Showing cached snapshot (sheet unreachable)';
+    }
+  }
+
+  async function loadFromSheet(){
+    setSyncStatus('loading');
+    try{
+      const res = await fetch(SHEET_CSV_URL + '&_ts=' + Date.now(), { cache: 'no-store' });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      const rows = parseCSV(text);
+      if(rows.length < 2) throw new Error('Empty sheet');
+      const header = rows[0];
+      const records = rows.slice(1).map(r => mapRowToRecord(header, r))
+        .filter(r => r.name && r.name !== '(Unnamed application)');
+      if(records.length === 0) throw new Error('No valid rows parsed');
+      DATA = records;
+      setSyncStatus('live');
+    } catch(err){
+      DATA = fallbackToRecords(RAW_FALLBACK);
+      setSyncStatus('cached');
+      console.warn('Sheet fetch failed, using bundled snapshot:', err);
+    }
+    refreshAllUI();
+  }
+
+  // ---------- Init ----------
+  $('#generated-on').textContent = 'Generated ' + new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+  $('#sheet-link').href = SHEET_VIEW_URL;
+  $('#footer-count').textContent = DATA.length + ' applications tracked';
+  renderStats();
+  populateFilters();
+  renderTable();
+  loadFromSheet();
+})();
+
+</script>
 </body>
 </html>
